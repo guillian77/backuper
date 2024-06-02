@@ -30,6 +30,8 @@ class BaseRepository
             $valueToSave = $entityState[$columnName];
 
             $stmt->bindParam(":{$columnName}", $valueToSave);
+
+            unset($valueToSave);
         }
 
         $stmt->execute();

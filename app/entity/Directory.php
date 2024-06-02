@@ -49,9 +49,4 @@ class Directory extends BaseEntity
 
         return $this;
     }
-
-    public function test()
-    {
-        dd(get_object_vars($this));
-    }
 }

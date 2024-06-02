@@ -1,0 +1,51 @@
+<?= $varToJavascript('backup_dirs', $backup_dirs); ?>
+<?= $varToJavascript('target_dirs', $target_dirs); ?>
+
+<link href="/plugins/backuper/assets/app.css" rel="stylesheet" />
+<script src="/plugins/backuper/assets/app.js" type= "module"  defer></script>
+
+<h1>Remote backup</h1>
+
+<form id="youhou" action method="post">
+
+    <!-- TARGET list -->
+    <div class="input-category" id="target_dir_list">
+        <h2 class="title">Target</h2>
+
+        <p class="input-info">A list of target where <b>Backup</b> will be saved.</p>
+
+        <input type="button" value="add" />
+    </div>
+
+    <!-- BACKUP list -->
+    <div class="input-category" id="backup_dir_list">
+        <h2 class="title">To Backup</h2>
+
+        <p class="input-info">A list of directory to backup in <b>Target</b>.</p>
+    </div>
+
+    <div class="input-category">
+        <h2 class="title">Configuration</h2>
+
+        <div class="input-row checkbox">
+            <label for="backup_enabled">Backup:</label>
+            <input type="checkbox" name="backup_enabled" id="backup_enabled">
+            <p class="input-info">Backup is enabled when this checkbox is ticket.</p>
+        </div>
+
+        <div class="input-row checkbox">
+            <label for="purge_enabled">Purge:</label>
+            <input type="checkbox" name="purge_enabled" id="purge_enabled">
+            <p class="input-info">Purge is enabled when this checkbox is ticket.</p>
+        </div>
+
+        <div class="input-row">
+            <label for="retention_days">Retention days:</label>
+            <input type="number" name="retention_days" placeholder="7" id="retention_days" />
+            <p class="input-info">Retention in day(s) before purging old backups. Only if Purge enabled.</p>
+        </div>
+    </div>
+
+    <button type="submit">Save</button>
+    <button type="button">Cancel</button>
+</form>

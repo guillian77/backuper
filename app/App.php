@@ -13,8 +13,6 @@ class App
 
     private Database $db;
 
-    public static $conf = null;
-
     private ?array $config;
 
     public static function get(): App
@@ -44,6 +42,11 @@ class App
     public function getDb(): Database
     {
         return $this->db = new Database("{$this->pluginPath}/backuper.sqlite3");
+    }
+
+    public function getConfig(): array
+    {
+        return $this->config;
     }
 
     private function enablePhpErrors(): void
