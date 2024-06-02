@@ -1,0 +1,29 @@
+.debug {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: whitesmoke;
+}
+
+.input-category {
+    background-color: rgba(227,227,227, 0.8);
+    padding: 8px 20px;
+    margin-bottom: 20px;
+}
+
+.input-category .title {
+    text-transform: uppercase;
+}
+
+.input-row {
+    display: block;
+    margin-bottom: 16px;
+}
+
+.input-info {
+    color: rgba(92, 92, 92);
+    font-style: italic;
+    margin: 0;
+}
+
+.input-row.checkbox {
+    /*border: 1px solid red;*/
+}

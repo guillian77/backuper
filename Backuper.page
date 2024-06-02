@@ -1,0 +1,87 @@
+Menu="Utilities"
+Title="Backuper"
+Icon="edit"
+---
+<?php
+
+$plugin = 'backuper';
+$cfg = parse_plugin_cfg($plugin);
+
+require "plugins/backuper/app/App.php";
+
+\App\App::get()->boot("plugins/backuper");
+
+$dirs = (new \App\Controller\DirectoryController())->index();
+
+
+// TODO: Create PHP Extension that pass data inside template.
+// TODO: ORRRRRR if I AM MOTIVATED I MAKE A FUCKING API BUT FLEM
+
+echo "<input type='hidden' id='madata' data-something='$dirs' />";
+
+?>
+
+<link href="/plugins/backuper/assets/app.css" rel="stylesheet" />
+
+<h1>Remote backup</h1>
+
+<form id="youhou" action method="post">
+    <div class="input-category">
+        <h2 class="title">Target</h2>
+
+        <p class="input-info">A list of target where <b>Backup</b> will be saved.</p>
+
+        <input type="text" name="target_dir[]" placeholder="/mnt/remotes/target1" class="input-row" />
+        <input type="text" name="target_dir[]" placeholder="/mnt/remotes/target2" class="input-row" />
+    </div>
+
+    <div class="input-category">
+        <h2 class="title">To Backup</h2>
+
+        <p class="input-info">A list of directory to backup in <b>Target</b>.</p>
+
+        <input type="text" name="backup_dir[]" placeholder="/mnt/user/directory_to_save" class="input-row" />
+        <input type="text" name="backup_dir[]" placeholder="/mnt/user/directory_to_save" class="input-row" />
+    </div>
+
+    <div class="input-category">
+        <h2 class="title">Configuration</h2>
+
+        <div class="input-row checkbox">
+            <label for="backup_enabled">Backup:</label>
+            <input type="checkbox" name="backup_enabled" id="backup_enabled">
+            <p class="input-info">Backup is enabled when this checkbox is ticket.</p>
+        </div>
+
+        <div class="input-row checkbox">
+            <label for="purge_enabled">Purge:</label>
+            <input type="checkbox" name="purge_enabled" id="purge_enabled">
+            <p class="input-info">Purge is enabled when this checkbox is ticket.</p>
+        </div>
+
+        <div class="input-row">
+            <label for="retention_days">Retention days:</label>
+            <input type="number" name="retention_days" placeholder="7" id="retention_days" />
+            <p class="input-info">Retention in day(s) before purging old backups. Only if Purge enabled.</p>
+        </div>
+    </div>
+
+    <button type="submit">Save</button>
+    <button type="button">Cancel</button>
+</form>
+
+<script>
+    console.log("BONJOUR")
+    let jensaisrien = document.querySelector("#madata")
+    console.log("BONJOUR")
+
+    console.log(typeof jensaisrien.getAttribute("data-something"))
+    console.log(typeof JSON.parse(jensaisrien.getAttribute("data-something")))
+    console.log(JSON.parse(jensaisrien.getAttribute("data-something")))
+
+    console.log(typeof <?= $dirs; ?>)
+    let oui = <?= $dirs; ?>
+    console.log(oui)
+
+</script>
+<!--<script src="/plugins/backuper/assets/js/app.js" type= "text/javascript"></script>-->
