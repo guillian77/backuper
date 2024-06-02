@@ -7,7 +7,7 @@ use Src\Database;
 
 class BaseRepository
 {
-    protected Database $db;
+    public Database $db;
 
     public function __construct()
     {
@@ -22,7 +22,7 @@ class BaseRepository
 
         $columnNames = array_keys($entityState);
 
-        $query = "UPDATE $tableName SET {$this->getPreparedParams($columnNames)} WHERE id = {$entity->getId()}";
+        $query = "REPLACE INTO $tableName {$this->getPreparedParams($columnNames)}";
 
         $stmt = $this->db->conn->prepare($query);
 
@@ -39,13 +39,21 @@ class BaseRepository
 
     private function getPreparedParams(array $columnNames): string
     {
-        $preparedString = "";
+        $fieldString = "";
+        $valueString = "";
 
         foreach ($columnNames as $columnName) {
-            $preparedString .= "$columnName = :{$columnName}, ";
+            $fieldString .= "{$columnName}, ";
+            $valueString .= ":{$columnName}, ";
         }
 
-        return trim($preparedString, ", ");
+        $fieldString = trim($fieldString, ", ");
+        $fieldString = "({$fieldString})";
+
+        $valueString = trim($valueString, ", ");
+        $valueString = "({$valueString})";
+
+        return "{$fieldString} VALUES {$valueString}";
     }
 
     private function getEntityTableName(object $entity): string
@@ -66,10 +74,6 @@ class BaseRepository
 
         foreach ($objectVars as $propertyName => $propertyValue) {
             $columnName = trim(str_replace(get_class($entity), "", $propertyName));
-
-            if ($columnName == "id" && $skipId) {
-                continue;
-            }
 
             $cleanedProperties[$columnName] = $propertyValue;
         }

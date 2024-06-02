@@ -6,13 +6,21 @@ use App\Entity\Directory;
 
 class DirectoryRepository extends BaseRepository
 {
-    /**
-     * @param string $type
-     *
-     * @return Directory[]
-     */
-    public function findAllByType(string $type): array
+    public function findAll(): array
     {
-        return $this->db->select("SELECT * FROM directory WHERE type = '{$type}';", Directory::class);
+        return $this->db->select("SELECT * FROM directory;");
+    }
+
+    public function deleteByIds(array $ids)
+    {
+        if (!$ids) { return null; }
+
+        $stmt = $this->db->conn->prepare("DELETE FROM directory WHERE id IN (:id)");
+
+        $ids = implode(", ", $ids);
+        $stmt->bindParam(":id", $ids);
+
+        $this->db->conn->query(str_replace("'", "", $stmt->getSQL(true)));
+        $stmt->clear();
     }
 }

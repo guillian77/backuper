@@ -7,13 +7,24 @@ use App\Entity\Directory;
 class DirectorySerializer
 {
     /**
-     * TODO: Create a global entity serializer.
+     * Convert entity to serialized data.
      *
-     * @param Directory $directory
+     * TODO: Create a default serializer.
+     *
+     * @param Directory|Directory[] $directory Directory entity to serialize.
      *
      * @return array
      */
-    public static function serialize(Directory $directory): array
+    public function serialize(Directory|array $directory): array
+    {
+        if (!is_array($directory)) {
+            return $this->handleSerialize($directory);
+        }
+
+        return array_map([$this, "handleSerialize"], $directory);
+    }
+
+    private function handleSerialize(Directory $directory): array
     {
         return [
             "id" => $directory->getId(),
@@ -22,8 +33,21 @@ class DirectorySerializer
         ];
     }
 
-    public function deserialize(string $directory): Directory
+    /**
+     * Convert standard data to entity.
+     *
+     * TODO: Create a default deserializer.
+     *
+     * @param array $directory Directory to deserialize.
+     *
+     * @return Directory
+     */
+    public function deserialize(array $directory): Directory
     {
-        return "";
+        return (new Directory())
+            ->setId($directory['id'])
+            ->setPath($directory['path'])
+            ->setType($directory['type'])
+            ;
     }
 }

@@ -1,25 +1,29 @@
-<?= $varToJavascript('backup_dirs', $backup_dirs); ?>
-<?= $varToJavascript('target_dirs', $target_dirs); ?>
+<?= $varToJavascript('dirs', $dirs); ?>
+<?= $varToJavascript('dir_ids', $dir_ids); ?>
 
 <link href="/plugins/backuper/assets/app.css" rel="stylesheet" />
 <script src="/plugins/backuper/assets/app.js" type= "module"  defer></script>
 
 <h1>Remote backup</h1>
 
-<form id="youhou" action method="post">
+<form id="backuper-form" action method="post">
 
     <!-- TARGET list -->
     <div class="input-category" id="target_dir_list">
-        <h2 class="title">Target</h2>
+        <h2 class="title">
+            Target
+            <span class="icon-u-plus btn add" title="Add one target directory." data-type="target"></span>
+        </h2>
 
         <p class="input-info">A list of target where <b>Backup</b> will be saved.</p>
-
-        <input type="button" value="add" />
     </div>
 
     <!-- BACKUP list -->
     <div class="input-category" id="backup_dir_list">
-        <h2 class="title">To Backup</h2>
+        <h2 class="title">
+            To Backup
+            <span class="icon-u-plus btn add" title="Add one backup directory." data-type="backup"></span>
+        </h2>
 
         <p class="input-info">A list of directory to backup in <b>Target</b>.</p>
     </div>
@@ -48,4 +52,6 @@
 
     <button type="submit">Save</button>
     <button type="button">Cancel</button>
+
+    <input type="hidden" id="deleted_dirs" name="deleted_dirs" value="[]" />
 </form>

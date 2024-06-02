@@ -20,7 +20,7 @@ class Database
         $this->conn = new SQLite3($db_file);
     }
 
-    public function select(string $query, string $entity = null): Array
+    public function select(string $query, string $entity = null): array
     {
         $results = $this->conn->query($query);
 
@@ -35,10 +35,10 @@ class Database
     /**
      * @throws ReflectionException
      */
-    private function buildResult(array $row, ?string $entity): Object
+    private function buildResult(array $row, ?string $entity): Object|array
     {
         if (!$entity) {
-            return (object) $row;
+            return $row;
         }
 
         $classInstance = new $entity;

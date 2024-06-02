@@ -4,21 +4,26 @@ namespace App\Controller;
 
 use App\Entity\Directory;
 use App\Repository\DirectoryRepository;
+use App\Serializer\DirectorySerializer;
 
 class DirectoryController extends BaseControler
 {
+    private DirectoryRepository $directoryRepo;
+
+    private DirectorySerializer $directorySerializer;
+
     public function index(): string
     {
+        $this->directoryRepo = new DirectoryRepository();
+        $this->directorySerializer = new DirectorySerializer();
+
         ($_POST) && $this->handleSubmit();
 
-        $repo = new DirectoryRepository();
-
-        $backupDirs = $repo->findAllByType("backup");
-        $targetDirs = $repo->findAllByType("target");
+        $dirs = $this->directoryRepo->findAll();
 
         return $this->render('configuration.html', [
-            "backup_dirs" => array_map([$this, "serialize"], $backupDirs),
-            "target_dirs" => array_map([$this, "serialize"], $targetDirs),
+            "dirs" => $dirs,
+            "dir_ids" => array_column($dirs, 'id'),
         ]);
     }
 
@@ -26,55 +31,20 @@ class DirectoryController extends BaseControler
     {
         $this->saveDirectory($_POST['target_dir'], Directory::TYPE_TARGET);
         $this->saveDirectory($_POST['backup_dir'], Directory::TYPE_BACKUP);
+
+        $this->directoryRepo->deleteByIds(json_decode($_POST['deleted_dirs']));
     }
 
     private function saveDirectory(array $dirs, string $type): void
     {
-        $repo = new DirectoryRepository();
-
         foreach ($dirs as $dirId => $dirPath) {
-            $toUpdateDir = $this->deserialize([
+            $toUpdateDir = $this->directorySerializer->deserialize([
                 'id' => $dirId,
                 'path' => $dirPath,
                 'type' => $type
             ]);
 
-            $repo->save($toUpdateDir);
+            $this->directoryRepo->save($toUpdateDir);
         }
-    }
-
-    /**
-     * Convert entity to serialized data.
-     *
-     * TODO: Create a default serializer.
-     *
-     * @param Directory $directory Directory entity to serialize.
-     * @return array
-     */
-    private function serialize(Directory $directory): array
-    {
-        return [
-            "id" => $directory->getId(),
-            "path" => $directory->getPath(),
-            "type" => $directory->getType(),
-        ];
-    }
-
-    /**
-     * Convert standard data to entity.
-     *
-     * TODO: Create a default deserializer.
-     *
-     * @param array $directory Directory to deserialize.
-     *
-     * @return Directory
-     */
-    private function deserialize(array $directory): Directory
-    {
-        return (new Directory())
-            ->setId($directory['id'])
-            ->setPath($directory['path'])
-            ->setType($directory['type'])
-        ;
     }
 }

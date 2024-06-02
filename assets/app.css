@@ -27,3 +27,25 @@
 .input-row.checkbox {
     /*border: 1px solid red;*/
 }
+
+.input-list-container {
+    display: flex;
+    align-items: end;
+}
+
+/**
+ * Buttons
+ */
+.btn {
+    background-color: #ff9900;
+    border: 1px solid #e3e3e3;
+    color: #f2f2f2;
+    cursor: pointer;
+    padding: 5px;
+    transition: .3s;
+}
+
+.btn.add { background-color: #579b1f; font-size: 12px }
+.btn.add:hover { background-color: #3b8303; }
+.btn.remove { background-color: #ff9900; }
+.btn.remove:hover { background-color: #C2801FFF; }
