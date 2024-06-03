@@ -7,7 +7,7 @@ CREATE TABLE directory(
 
 DROP TABLE IF EXISTS configuration;
 CREATE TABLE configuration(
-    key TEXT NOT NULL,
+    key TEXT NOT NULL PRIMARY KEY UNIQUE,
     value TEXT NOT NULL
 );
 

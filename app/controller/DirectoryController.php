@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Directory;
 use App\Repository\ConfigurationRepository;
 use App\Repository\DirectoryRepository;
+use App\Serializer\ConfigurationSerializer;
 use App\Serializer\DirectorySerializer;
 
 class DirectoryController extends BaseControler
@@ -15,6 +16,8 @@ class DirectoryController extends BaseControler
 
     private ConfigurationRepository $configurationRepo;
 
+    private ConfigurationSerializer $configurationSerializer;
+
     public function __construct()
     {
         parent::__construct();
@@ -22,6 +25,7 @@ class DirectoryController extends BaseControler
         $this->directoryRepo = new DirectoryRepository();
         $this->configurationRepo = new ConfigurationRepository();
         $this->directorySerializer = new DirectorySerializer();
+        $this->configurationSerializer = new ConfigurationSerializer();
     }
 
     public function index(): string
@@ -44,6 +48,8 @@ class DirectoryController extends BaseControler
         $this->saveDirectory($_POST['backup_dir'], Directory::TYPE_BACKUP);
 
         $this->directoryRepo->deleteByIds(json_decode($_POST['deleted_dirs']));
+
+        $this->saveConfiguration($_POST['conf']);
     }
 
     private function saveDirectory(array $dirs, string $type): void
@@ -57,5 +63,28 @@ class DirectoryController extends BaseControler
 
             $this->directoryRepo->save($toUpdateDir);
         }
+    }
+
+    private function saveConfiguration(array $conf): void
+    {
+        $this->configurationRepo->save($this->configurationSerializer->deserialize(
+            'backup_enabled',
+            isset($conf['backup_enabled']) ? 1 : 0
+        ));
+
+        $this->configurationRepo->save($this->configurationSerializer->deserialize(
+            'purge_enabled',
+            isset($conf['purge_enabled']) ? 1 : 0
+        ));
+
+        $this->configurationRepo->save($this->configurationSerializer->deserialize(
+            'retention_days',
+            $conf['retention_days']
+        ));
+
+        $this->configurationRepo->save($this->configurationSerializer->deserialize(
+            'schedule',
+            $conf['schedule']
+        ));
     }
 }

@@ -18,30 +18,30 @@ class Configuration
         self::SCHEDULE_TYPE_CUSTOM,
     ];
 
-    private string $configurationKey;
+    private string $key;
 
-    private string $configurationValue;
+    private mixed $value;
 
-    public function getConfigurationKey(): string
+    public function getKey(): string
     {
-        return $this->configurationKey;
+        return $this->key;
     }
 
-    public function setConfigurationKey(string $configurationKey): self
+    public function setKey(string $key): self
     {
-        $this->configurationKey = $configurationKey;
+        $this->key = $key;
 
         return $this;
     }
 
-    public function getConfigurationValue(): string
+    public function getValue(): string
     {
-        return $this->configurationValue;
+        return $this->value;
     }
 
-    public function setConfigurationValue(string $configurationValue): self
+    public function setValue(mixed $value): self
     {
-        $this->configurationValue = $configurationValue;
+        $this->value = $value;
 
         return $this;
     }
