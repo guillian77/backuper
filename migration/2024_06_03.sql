@@ -11,7 +11,9 @@ CREATE TABLE configuration(
     value TEXT NOT NULL
 );
 
-INSERT INTO configuration (key, value) VALUES ('backup_enabled', false);
+INSERT INTO configuration (key, value) VALUES ('backup_enabled', true);
 INSERT INTO configuration (key, value) VALUES ('purge_enabled', true);
+INSERT INTO configuration (key, value) VALUES ('compress_enabled', true);
+INSERT INTO configuration (key, value) VALUES ('crypt_enabled', true);
 INSERT INTO configuration (key, value) VALUES ('retention_days', 3);
 INSERT INTO configuration (key, value) VALUES ('schedule', 'custom');
