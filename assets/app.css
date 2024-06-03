@@ -6,7 +6,7 @@
 .input-category {
     background-color: rgba(227,227,227, 0.8);
     padding: 8px 20px;
-    margin-bottom: 20px;
+    margin: 20px 0;
 }
 
 .input-category .title {
