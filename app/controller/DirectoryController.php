@@ -7,6 +7,7 @@ use App\Repository\ConfigurationRepository;
 use App\Repository\DirectoryRepository;
 use App\Serializer\ConfigurationSerializer;
 use App\Serializer\DirectorySerializer;
+use App\Service\CronHandler;
 
 class DirectoryController extends BaseControler
 {
@@ -18,6 +19,8 @@ class DirectoryController extends BaseControler
 
     private ConfigurationSerializer $configurationSerializer;
 
+    private CronHandler $cronHandler;
+
     public function __construct()
     {
         parent::__construct();
@@ -26,6 +29,7 @@ class DirectoryController extends BaseControler
         $this->configurationRepo = new ConfigurationRepository();
         $this->directorySerializer = new DirectorySerializer();
         $this->configurationSerializer = new ConfigurationSerializer();
+        $this->cronHandler = new CronHandler();
     }
 
     public function index(): string
@@ -38,7 +42,6 @@ class DirectoryController extends BaseControler
         return $this->render('backuper.html', [
             "dirs" => $dirs,
             "conf" => $conf,
-            "dir_ids" => array_column($dirs, 'id'),
         ]);
     }
 
@@ -50,6 +53,8 @@ class DirectoryController extends BaseControler
         $this->directoryRepo->deleteByIds(json_decode($_POST['deleted_dirs']));
 
         $this->saveConfiguration($_POST['conf']);
+
+        $this->cronHandler->generate();
     }
 
     private function saveDirectory(array $dirs, string $type): void

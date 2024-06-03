@@ -1,6 +1,5 @@
 <?= $varToJavascript('dirs', $dirs); ?>
 <?= $varToJavascript('conf', $conf); ?>
-<?= $varToJavascript('dir_ids', $dir_ids); ?>
 
 <link href="/plugins/backuper/assets/app.css" rel="stylesheet" />
 <script src="/plugins/backuper/assets/app.js" type= "module"  defer></script>
@@ -35,9 +34,10 @@
                 <option value="daily">Daily</option>
                 <option value="monthly">Monthly</option>
                 <option value="yearly">Yearly</option>
-                <option value="custom">Custom</option>
             </select>
         </div>
+
+        <button type="submit">Save</button>
     </div>
     <!-- CONFIGURATION: End -->
 

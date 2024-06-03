@@ -20,12 +20,21 @@ class Database
         $this->conn = new SQLite3($db_file);
     }
 
-    public function select(string $query, string $entity = null): array
+    public function select(string $query, string $entity = null, $indexBy = null): array
     {
         $results = $this->conn->query($query);
 
         $formattedData = [];
+
         while($row = $results->fetchArray(SQLITE3_ASSOC)){
+            $buildResult = $this->buildResult($row, $entity);
+
+            if ($indexBy) {
+                $formattedData[$row[$indexBy]] = $buildResult;
+
+                continue;
+            }
+
             $formattedData[] = $this->buildResult($row, $entity);
         }
 
@@ -35,7 +44,7 @@ class Database
     /**
      * @throws ReflectionException
      */
-    private function buildResult(array $row, ?string $entity): Object|array
+    private function buildResult(array $row, ?string $entity,): Object|array
     {
         if (!$entity) {
             return $row;
