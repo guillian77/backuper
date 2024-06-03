@@ -53,9 +53,4 @@ class Database
 
         return $classInstance;
     }
-
-    private function init(): string
-    {
-        return "CREATE TABLE directory(id INTEGER PRIMARY KEY ASC, path TEXT NOT NULL, type TEXT NOT NULL);";
-    }
 }
