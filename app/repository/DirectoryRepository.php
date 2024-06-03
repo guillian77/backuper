@@ -2,8 +2,6 @@
 
 namespace App\Repository;
 
-use App\Entity\Directory;
-
 class DirectoryRepository extends BaseRepository
 {
     public function findAll(): array

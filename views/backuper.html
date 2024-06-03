@@ -1,0 +1,75 @@
+<?= $varToJavascript('dirs', $dirs); ?>
+<?= $varToJavascript('conf', $conf); ?>
+<?= $varToJavascript('dir_ids', $dir_ids); ?>
+
+<link href="/plugins/backuper/assets/app.css" rel="stylesheet" />
+<script src="/plugins/backuper/assets/app.js" type= "module"  defer></script>
+
+<form id="backuper-form" action method="post">
+
+    <!-- CONFIGURATION: Start -->
+    <div class="input-category">
+        <h2 class="title">Configuration</h2>
+
+        <div class="input-row checkbox">
+            <label for="backup_enabled">Backup:</label>
+            <input type="checkbox" name="conf[backup_enabled]" id="backup_enabled" class="backuper_conf">
+            <p class="input-info">Backup is enabled when this checkbox is ticket.</p>
+        </div>
+
+        <div class="input-row checkbox">
+            <label for="purge_enabled">Purge:</label>
+            <input type="checkbox" name="conf[purge_enabled]" id="purge_enabled" class="backuper_conf">
+            <p class="input-info">Purge is enabled when this checkbox is ticket.</p>
+        </div>
+
+        <div class="input-row">
+            <label for="retention_days">Retention days:</label>
+            <input type="number" name="conf[retention_days]" placeholder="7" id="retention_days" class="backuper_conf" />
+            <p class="input-info">Retention in day(s) before purging old backups. Only if Purge enabled.</p>
+        </div>
+
+        <div class="input-row">
+            <select name="conf[schedule]" class="backuper_conf">
+                <option value="hourly">Hourly</option>
+                <option value="daily">Daily</option>
+                <option value="monthly">Monthly</option>
+                <option value="yearly">Yearly</option>
+                <option value="custom">Custom</option>
+            </select>
+        </div>
+    </div>
+    <!-- CONFIGURATION: End -->
+
+    <!-- TARGET list -->
+    <div class="input-category" id="target_dir_list">
+        <h2 class="title">
+            Target
+            <span class="icon-u-plus btn add" title="Add one target directory." data-type="target"></span>
+        </h2>
+
+        <p class="input-info">A list of target where <b>Backup</b> will be saved.</p>
+    </div>
+
+    <!-- BACKUP list -->
+    <div class="input-category" id="backup_dir_list">
+        <h2 class="title">
+            To Backup
+            <span class="icon-u-plus btn add" title="Add one backup directory." data-type="backup"></span>
+        </h2>
+
+        <p class="input-info">A list of directory to backup in <b>Target</b>.</p>
+    </div>
+
+    <!-- HEALTHCHECK: Start -->
+    <div class="input-category">
+        <h2 class="title">Healthcheck</h2>
+        <p>Here you can have a quick look about backup history and health.</p>
+    </div>
+    <!-- HEALTHCHECK: End -->
+
+    <button type="submit">Save</button>
+    <button type="button">Cancel</button>
+
+    <input type="hidden" id="deleted_dirs" name="deleted_dirs" value="[]" />
+</form>

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Directory;
+use App\Repository\ConfigurationRepository;
 use App\Repository\DirectoryRepository;
 use App\Serializer\DirectorySerializer;
 
@@ -12,17 +13,27 @@ class DirectoryController extends BaseControler
 
     private DirectorySerializer $directorySerializer;
 
+    private ConfigurationRepository $configurationRepo;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->directoryRepo = new DirectoryRepository();
+        $this->configurationRepo = new ConfigurationRepository();
+        $this->directorySerializer = new DirectorySerializer();
+    }
+
     public function index(): string
     {
-        $this->directoryRepo = new DirectoryRepository();
-        $this->directorySerializer = new DirectorySerializer();
-
         ($_POST) && $this->handleSubmit();
 
         $dirs = $this->directoryRepo->findAll();
+        $conf = $this->configurationRepo->findAll();
 
-        return $this->render('configuration.html', [
+        return $this->render('backuper.html', [
             "dirs" => $dirs,
+            "conf" => $conf,
             "dir_ids" => array_column($dirs, 'id'),
         ]);
     }

@@ -1,15 +1,41 @@
-export default class Configuration {
+export default class Backuper {
     toDeleteIds = []
 
-    constructor(dirs) {
+    constructor(dirs, conf) {
         for (let dir of dirs) {
             this.#addToDirList(dir.type, dir.path, dir.id)
         }
 
+        this.#handleConfiguration(conf)
         this.#initAddButtons()
         this.#handleForm()
 
         return this
+    }
+
+    #handleConfiguration(configurations) {
+        for (let conf of configurations) {
+            if (!conf.key) { continue }
+            if (!conf.value) { continue }
+
+            this.#applyConfiguration(conf)
+        }
+    }
+
+    #applyConfiguration(conf) {
+        let element = document.querySelector(`.backuper_conf[name='conf[${conf.key}]']`)
+
+        if (!element) { throw new Error(`${conf.key} element not found.`) }
+
+        if (element.type === "checkbox") {
+            if (conf.value === "0") { return; }
+
+            element.checked = conf.value
+
+            return
+        }
+
+        element.value = conf.value
     }
 
     #initAddButtons() {
