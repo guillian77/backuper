@@ -40,6 +40,13 @@ class OutputService
         echo "{$this->formatDate()} [ERROR] {$message}\n";
     }
 
+    public function spaces(int $number): void
+    {
+        for ($i=0; $i < $number; $i++) {
+            echo "\n";
+        }
+    }
+
     private function formatDate(): string
     {
         return (new DateTime())->format("Y_m_d_H_i_s");
