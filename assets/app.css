@@ -1,14 +1,35 @@
-.debug {
-    background-color: rgba(0, 0, 0, 0.8);
-    color: whitesmoke;
-}
-
-.input-category {
+/**
+ * ---------------------------------------------------------------------------------
+ * GLOBAL
+ * ---------------------------------------------------------------------------------
+ */
+.container {
     background-color: rgba(227,227,227, 0.8);
     padding: 8px 20px;
     margin: 20px 0;
 }
 
+.debug {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: whitesmoke;
+}
+
+/**
+ * ---------------------------------------------------------------------------------
+ * ALERTS
+ * ---------------------------------------------------------------------------------
+ */
+.alert-message { font-weight: bold; color: #FFFFFF; }
+.alert-message.error { background-color: #f44336; }
+.alert-message.warning { background-color: #ff9800; }
+.alert-message.info { background-color: #2196F3; }
+.alert-message.success { background-color: #4CAF50; }
+
+/**
+ * ---------------------------------------------------------------------------------
+ * INPUTS
+ * ---------------------------------------------------------------------------------
+ */
 .input-category .title {
     text-transform: uppercase;
 }
@@ -34,7 +55,9 @@
 }
 
 /**
- * Buttons
+ * ---------------------------------------------------------------------------------
+ * BUTTONS
+ * ---------------------------------------------------------------------------------
  */
 .btn {
     background-color: #ff9900;
