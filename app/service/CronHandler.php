@@ -27,8 +27,11 @@ class CronHandler
         $pluginPath = App::get()->getConfig()['plugin_path'];
 
         $cronPath = $pluginPath .self::DS . "backuper.cron";
-        $cronBinaryPath = $pluginPath . self::DS . "bin" . self::DS . "startSchedule.php";
+        $cronBinaryPath = $pluginPath . self::DS . "bin" . self::DS . "console";
 
-        file_put_contents($cronPath, "{$relatedCron} {$cronBinaryPath}\n");
+        file_put_contents(
+            $cronPath,
+            "{$relatedCron} {$cronBinaryPath} backup\n"
+        );
     }
 }
