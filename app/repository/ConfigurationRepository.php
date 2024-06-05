@@ -19,13 +19,4 @@ class ConfigurationRepository extends BaseRepository
         return $this->db
             ->select("SELECT * FROM configuration WHERE key = 'schedule';", Configuration::class)[0];
     }
-
-    public function findScheduleAndBackup(bool $asEntity = false)
-    {
-        return $this->db->select(
-            "SELECT * FROM configuration WHERE key IN ('backup_enabled','purge_enabled');",
-            ($asEntity) ? Configuration::class : null,
-            indexBy: "key"
-        );
-    }
 }

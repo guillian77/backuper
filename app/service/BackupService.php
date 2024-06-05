@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Configuration;
 use App\Entity\Directory;
 use App\Repository\ConfigurationRepository;
 use App\Repository\DirectoryRepository;
@@ -11,7 +12,7 @@ class BackupService
     private ConfigurationRepository $confRepo;
     private DirectoryRepository $direRepo;
     private OutputService $output;
-    private array $conf;
+    private Configuration $conf;
     private array $backupDirs;
     private array $targetDirs;
 
@@ -21,7 +22,7 @@ class BackupService
         $this->direRepo = new DirectoryRepository();
         $this->output   = new OutputService();
 
-        $this->conf = $this->confRepo->findScheduleAndBackup(true);
+        $this->conf = $this->confRepo->findAll(true);
 
         $this->backupDirs = $this->direRepo->findByType(Directory::TYPE_BACKUP);
         $this->targetDirs = $this->direRepo->findByType(Directory::TYPE_TARGET);
@@ -33,16 +34,20 @@ class BackupService
     {
         $this->output->title("Backup start");
 
+        $this->output->spaces(1);
+
         foreach ($this->targetDirs as $targetDir) {
             $targetDirPath = $targetDir->getPath();
 
             $this->output->info("Current target: $targetDirPath");
 
+            $this->output->spaces(1);
+
             // TODO: Remove this double foreach :O
             foreach ($this->backupDirs as $backupDir) {
                 $backupDirPath = $backupDir->getPath();
 
-                $this->output->section("Backup $backupDirPath");
+                $this->output->section("OPERATE ON: $backupDirPath");
 
                 if (!file_exists($backupDirPath)) {
                     $this->output->warning("Skip not found $backupDirPath");
@@ -50,16 +55,21 @@ class BackupService
                     continue;
                 }
 
-                if ($this->conf['backup_enabled']->getValue()) {
+                if ($this->conf->getBackupEnabled()) {
                     $this->backupDir($backupDirPath, $targetDirPath);
+                } else {
+                    $this->output->info("Backup currently disabled.");
                 }
 
-                if ($this->conf['purge_enabled']->getValue()) {
+                if ($this->conf->getPurgeEnabled()) {
                     $this->purgeDir($backupDirPath, $targetDirPath);
                 }
+
+                $this->output->spaces(1);
             }
         }
 
+        $this->output->spaces(1);
         $this->output->success("Backup end.");
     }
 
