@@ -3,6 +3,7 @@
 namespace App\Serializer;
 
 use App\Entity\Configuration;
+use Exception;
 
 class ConfigurationSerializer
 {
@@ -37,16 +38,22 @@ class ConfigurationSerializer
      *
      * TODO: Create a default deserializer.
      *
-     * @param string $key
-     * @param mixed $value
+     * @param array $conf
      *
      * @return Configuration
+     *
+     * @throws Exception
      */
-    public function deserialize(string $key, mixed $value): Configuration
+    public function deserialize(array $conf): Configuration
     {
         return (new Configuration)
-            ->setKey($key)
-            ->setValue($value)
+            ->setId(1)
+            ->setEncryptEnabled(isset($conf['encrypt_enabled']))
+            ->setBackupEnabled(isset($conf['backup_enabled']))
+            ->setPurgeEnabled(isset($conf['purge_enabled']))
+            ->setEncryptionKey($conf['encryption_key'])
+            ->setRetentionDays($conf['retention_days'])
+            ->setScheduleType($conf['schedule_type'])
         ;
     }
 }

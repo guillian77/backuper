@@ -2,46 +2,123 @@
 
 namespace App\Entity;
 
+use Exception;
+
 class Configuration
 {
     public const SCHEDULE_TYPE_HOURLY  = "hourly";
     public const SCHEDULE_TYPE_DAILY   = "daily";
     public const SCHEDULE_TYPE_MONTHLY = "monthly";
     public const SCHEDULE_TYPE_YEARLY  ="yearly";
-    public const SCHEDULE_TYPE_CUSTOM  ="custom";
 
     public const SCHEDULE_TYPES = [
         self::SCHEDULE_TYPE_HOURLY,
         self::SCHEDULE_TYPE_DAILY,
         self::SCHEDULE_TYPE_MONTHLY,
         self::SCHEDULE_TYPE_YEARLY,
-        self::SCHEDULE_TYPE_CUSTOM,
     ];
 
-    private string $key;
+    private int $id;
 
-    private mixed $value;
+    private bool $backupEnabled;
 
-    public function getKey(): string
+    private bool $purgeEnabled;
+
+    private bool $encryptEnabled;
+
+    private string $encryptionKey;
+
+    private int $retentionDays;
+
+    private string $scheduleType;
+
+    public function getId(): int
     {
-        return $this->key;
+        return $this->id;
     }
 
-    public function setKey(string $key): self
+    public function setId(int $id): self
     {
-        $this->key = $key;
+        $this->id = $id;
 
         return $this;
     }
 
-    public function getValue(): string
+    public function getBackupEnabled(): bool
     {
-        return $this->value;
+        return $this->backupEnabled;
     }
 
-    public function setValue(mixed $value): self
+    public function setBackupEnabled(bool $backupEnabled): self
     {
-        $this->value = $value;
+        $this->backupEnabled = $backupEnabled;
+
+        return $this;
+    }
+
+    public function getPurgeEnabled(): bool
+    {
+        return $this->purgeEnabled;
+    }
+
+    public function setPurgeEnabled(bool $purgeEnabled): self
+    {
+        $this->purgeEnabled = $purgeEnabled;
+
+        return $this;
+    }
+
+    public function getEncryptEnabled(): bool
+    {
+        return $this->encryptEnabled;
+    }
+
+    public function setEncryptEnabled(bool $encryptEnabled): self
+    {
+        $this->encryptEnabled = $encryptEnabled;
+
+        return $this;
+    }
+
+    public function getEncryptionKey(): string
+    {
+        return $this->encryptionKey;
+    }
+
+    public function setEncryptionKey(string $encryptionKey): self
+    {
+        $this->encryptionKey = $encryptionKey;
+
+        return $this;
+    }
+
+    public function getRetentionDays(): int
+    {
+        return $this->retentionDays;
+    }
+
+    public function setRetentionDays(int $retentionDays): self
+    {
+        $this->retentionDays = $retentionDays;
+
+        return $this;
+    }
+
+    public function getScheduleType(): string
+    {
+        return $this->scheduleType;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function setScheduleType(string $scheduleType): self
+    {
+        if (!in_array($scheduleType, self::SCHEDULE_TYPES)) {
+            throw new Exception("$scheduleType not allowed.");
+        }
+
+        $this->scheduleType = $scheduleType;
 
         return $this;
     }
