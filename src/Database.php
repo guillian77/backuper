@@ -56,8 +56,12 @@ class Database
 
         foreach ($reflectedProperties as $reflectedProperty) {
             $propertyName = $reflectedProperty->name;
+            $columnName = implode('_', preg_split('/(?=[A-Z])/', $propertyName));
+            $columnName = strtolower($columnName);
+
             $setterMethod = "set" . ucfirst($propertyName);
-            call_user_func([$classInstance, $setterMethod], $row[$propertyName]);
+
+            call_user_func([$classInstance, $setterMethod], $row[$columnName]);
         }
 
         return $classInstance;

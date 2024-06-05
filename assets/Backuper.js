@@ -1,41 +1,42 @@
+import Alert from "./Alert.js";
+
 export default class Backuper {
+    alert = new Alert()
+
     toDeleteIds = []
 
+    conf = null
+
     constructor(dirs, conf) {
+        this.conf = conf
+
         for (let dir of dirs) {
             this.#addToDirList(dir.type, dir.path, dir.id)
         }
 
-        this.#handleConfiguration(conf)
+        Object.keys(conf).map(confKey => { this.#applyConfiguration(confKey) })
         this.#initAddButtons()
         this.#handleForm()
 
         return this
     }
 
-    #handleConfiguration(configurations) {
-        for (let conf of configurations) {
-            if (!conf.key) { continue }
-            if (!conf.value) { continue }
+    #applyConfiguration(confName) {
+        if (confName === "id") { return; }
 
-            this.#applyConfiguration(conf)
-        }
-    }
+        let element = document.querySelector(`.backuper_conf[name='conf[${confName}]']`)
 
-    #applyConfiguration(conf) {
-        let element = document.querySelector(`.backuper_conf[name='conf[${conf.key}]']`)
-
-        if (!element) { throw new Error(`${conf.key} element not found.`) }
+        if (!element) { this.alert.warning(`Unable to find ${confName} in form.`); return; }
 
         if (element.type === "checkbox") {
-            if (conf.value === "0") { return; }
+            if (this.conf[confName] === "0") { return; }
 
-            element.checked = conf.value
+            element.checked = this.conf[confName]
 
             return
         }
 
-        element.value = conf.value
+        element.value = this.conf[confName]
     }
 
     #initAddButtons() {

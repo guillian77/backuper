@@ -8,17 +8,15 @@ use App\Repository\DirectoryRepository;
 use App\Serializer\ConfigurationSerializer;
 use App\Serializer\DirectorySerializer;
 use App\Service\CronHandler;
+use App\Service\RequestService;
 
 class DirectoryController extends BaseControler
 {
     private DirectoryRepository $directoryRepo;
-
     private DirectorySerializer $directorySerializer;
-
     private ConfigurationRepository $configurationRepo;
-
     private ConfigurationSerializer $configurationSerializer;
-
+    private RequestService $request;
     private CronHandler $cronHandler;
 
     public function __construct()
@@ -29,6 +27,7 @@ class DirectoryController extends BaseControler
         $this->configurationRepo = new ConfigurationRepository();
         $this->directorySerializer = new DirectorySerializer();
         $this->configurationSerializer = new ConfigurationSerializer();
+        $this->request = new RequestService();
         $this->cronHandler = new CronHandler();
     }
 
@@ -47,17 +46,21 @@ class DirectoryController extends BaseControler
 
     private function handleSubmit(): void
     {
-        $this->saveDirectory($_POST['target_dir'], Directory::TYPE_TARGET);
-        $this->saveDirectory($_POST['backup_dir'], Directory::TYPE_BACKUP);
+        $this->directoryRepo->deleteByIds(
+            json_decode($this->request->post('deleted_dirs'))
+        );
 
-        $this->directoryRepo->deleteByIds(json_decode($_POST['deleted_dirs']));
+        $this->saveDirectory($this->request->post("target_dir"), Directory::TYPE_TARGET);
+        $this->saveDirectory($this->request->post("backup_dir"), Directory::TYPE_BACKUP);
 
-        $this->saveConfiguration($_POST['conf']);
+        $this->configurationRepo->upsert(
+            $this->configurationSerializer->deserialize($this->request->post('conf'))
+        );
 
         $this->cronHandler->generate();
     }
 
-    private function saveDirectory(array $dirs, string $type): void
+    private function saveDirectory(?array $dirs, string $type): void
     {
         foreach ($dirs as $dirId => $dirPath) {
             $toUpdateDir = $this->directorySerializer->deserialize([
@@ -66,30 +69,7 @@ class DirectoryController extends BaseControler
                 'type' => $type
             ]);
 
-            $this->directoryRepo->save($toUpdateDir);
+            $this->directoryRepo->upsert($toUpdateDir);
         }
-    }
-
-    private function saveConfiguration(array $conf): void
-    {
-        $this->configurationRepo->save($this->configurationSerializer->deserialize(
-            'backup_enabled',
-            isset($conf['backup_enabled']) ? 1 : 0
-        ));
-
-        $this->configurationRepo->save($this->configurationSerializer->deserialize(
-            'purge_enabled',
-            isset($conf['purge_enabled']) ? 1 : 0
-        ));
-
-        $this->configurationRepo->save($this->configurationSerializer->deserialize(
-            'retention_days',
-            $conf['retention_days']
-        ));
-
-        $this->configurationRepo->save($this->configurationSerializer->deserialize(
-            'schedule',
-            $conf['schedule']
-        ));
     }
 }

@@ -1,0 +1,60 @@
+<?php
+
+require "plugins/backuper/app/App.php";
+
+\App\App::get()->boot("plugins/backuper");
+
+$pluginPath = \App\App::get()->getConfig()['plugin_path'];
+$commandPath = $pluginPath
+    . DIRECTORY_SEPARATOR
+    . "app"
+    . DIRECTORY_SEPARATOR
+    . "command";
+
+if (!file_exists($commandPath)) {
+    throw new Exception("Command path not found under $commandPath.");
+}
+
+$classFiles = array_filter(scandir($commandPath), function ($fileName) {
+    return ($fileName !== "." && $fileName !== ".." && $fileName !== "BaseCommand.php");
+});
+
+$commands = [];
+
+foreach ($classFiles as $classFile) {
+    $classNamespace = str_replace(".php", "", "App\\Command\\$classFile");
+
+    $classProps = get_class_vars($classNamespace);
+
+    $commandName = $classProps['commandName'];
+
+    $commands[$commandName] = [
+        'name' => $commandName,
+        'namespace' => $classNamespace,
+        'description' => $classProps['commandDescription'],
+    ];
+}
+
+function printHelp($commands): void
+{
+    echo "Available commands:\n\n";
+
+    foreach ($commands as $command) {
+        echo "{$command['name']} - {$command['description']}\n";
+    }
+
+    die(0);
+}
+
+if (!isset($argv[1]) || $commands[$argv[1]] === "help") {
+    printHelp($commands);
+}
+
+if (isset($commands[$argv[1]])) {
+    (new $commands[$argv[1]]['namespace'])->execute();
+
+    die(0);
+}
+
+echo "Command not found.\n";
+

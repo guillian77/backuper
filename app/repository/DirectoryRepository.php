@@ -28,9 +28,11 @@ class DirectoryRepository extends BaseRepository
         $stmt = $this->db->conn->prepare("DELETE FROM directory WHERE id IN (:id)");
 
         $ids = implode(", ", $ids);
+
         $stmt->bindParam(":id", $ids);
 
         $this->db->conn->query(str_replace("'", "", $stmt->getSQL(true)));
+
         $stmt->clear();
     }
 }

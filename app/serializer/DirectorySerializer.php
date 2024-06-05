@@ -45,7 +45,7 @@ class DirectorySerializer
     public function deserialize(array $directory): Directory
     {
         return (new Directory())
-            ->setId($directory['id'])
+            ->setId($directory['id'] ?? 0)
             ->setPath($directory['path'])
             ->setType($directory['type'])
             ;

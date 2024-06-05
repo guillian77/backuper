@@ -6,8 +6,10 @@
 
 <form id="backuper-form" action method="post">
 
+    <div id="alert-container"></div>
+
     <!-- CONFIGURATION: Start -->
-    <div class="input-category">
+    <div class="container input-category">
         <h2 class="title">Configuration</h2>
 
         <div class="input-row checkbox">
@@ -22,6 +24,18 @@
             <p class="input-info">Purge is enabled when this checkbox is ticket.</p>
         </div>
 
+        <div class="input-row checkbox">
+            <label for="encrypt_enabled">Encrypt:</label>
+            <input type="checkbox" name="conf[encrypt_enabled]" id="encrypt_enabled" class="backuper_conf">
+            <p class="input-info">Archive encryption is enabled when this checkbox is ticket.</p>
+        </div>
+
+        <div class="input-row">
+            <label for="encryption_key">Age encryption key:</label>
+            <input type="text" name="conf[encryption_key]" placeholder="Your Age key" id="encryption_key" class="backuper_conf" />
+            <p class="input-info">Only used when encryption is enabled.</p>
+        </div>
+
         <div class="input-row">
             <label for="retention_days">Retention days:</label>
             <input type="number" name="conf[retention_days]" placeholder="7" id="retention_days" class="backuper_conf" />
@@ -29,7 +43,7 @@
         </div>
 
         <div class="input-row">
-            <select name="conf[schedule]" class="backuper_conf">
+            <select name="conf[schedule_type]" class="backuper_conf">
                 <option value="hourly">Hourly</option>
                 <option value="daily">Daily</option>
                 <option value="monthly">Monthly</option>
@@ -42,7 +56,7 @@
     <!-- CONFIGURATION: End -->
 
     <!-- TARGET list -->
-    <div class="input-category" id="target_dir_list">
+    <div class="container input-category" id="target_dir_list">
         <h2 class="title">
             Target
             <span class="icon-u-plus btn add" title="Add one target directory." data-type="target"></span>
@@ -52,7 +66,7 @@
     </div>
 
     <!-- BACKUP list -->
-    <div class="input-category" id="backup_dir_list">
+    <div class="container input-category" id="backup_dir_list">
         <h2 class="title">
             To Backup
             <span class="icon-u-plus btn add" title="Add one backup directory." data-type="backup"></span>
@@ -62,7 +76,7 @@
     </div>
 
     <!-- HEALTHCHECK: Start -->
-    <div class="input-category">
+    <div class="container">
         <h2 class="title">Healthcheck</h2>
         <p>Here you can have a quick look about backup history and health.</p>
     </div>

@@ -14,15 +14,52 @@ class BaseRepository
         $this->db = App::get()->getDb();
     }
 
-    public function save($entity): void
+    public function upsert(object $entity): void
+    {
+        $existingRow = $this->db->conn
+            ->query("SELECT id FROM {$this->getEntityTableName($entity)} WHERE id = {$entity->getId()}")
+            ->fetchArray(SQLITE3_ASSOC);
+
+        if ($existingRow) {
+            $this->update($entity);
+
+            return;
+        }
+
+        $this->save($entity);
+    }
+
+    public function update(object $entity): void
+    {
+        $tableName = $this->getEntityTableName($entity);
+        $entityState = $this->currentEntityValues($entity);
+        $columnNames = array_keys($entityState);
+
+        $stmt = $this->db->conn->prepare("UPDATE $tableName SET {$this->getPreparedUpdate($columnNames)} WHERE id = {$entity->getId()}");
+
+        foreach ($columnNames as $columnName) {
+            $valueToSave = $entityState[$columnName];
+
+            $stmt->bindParam(":{$columnName}", $valueToSave);
+
+            unset($valueToSave);
+        }
+
+        $stmt->execute();
+    }
+
+    public function save(object $entity): void
     {
         $tableName = $this->getEntityTableName($entity);
 
         $entityState = $this->currentEntityValues($entity);
 
-        $columnNames = array_keys($entityState);
+        $columnNames = array_filter( // Let DB handle ID on INSERT.
+            array_keys($entityState),
+            function($c) { return $c !== "id"; }
+        );
 
-        $query = "REPLACE INTO $tableName {$this->getPreparedParams($columnNames)}";
+        $query = "INSERT INTO $tableName {$this->getPreparedInsert($columnNames)}";
 
         $stmt = $this->db->conn->prepare($query);
 
@@ -37,7 +74,7 @@ class BaseRepository
         $stmt->execute();
     }
 
-    private function getPreparedParams(array $columnNames): string
+    private function getPreparedInsert(array $columnNames): string
     {
         $fieldString = "";
         $valueString = "";
@@ -56,6 +93,17 @@ class BaseRepository
         return "{$fieldString} VALUES {$valueString}";
     }
 
+    private function getPreparedUpdate(array $columnNames): string
+    {
+        $updateQueryParams = "";
+
+        foreach ($columnNames as $columnName) {
+            $updateQueryParams .= "$columnName = :{$columnName}, ";
+        }
+
+        return trim($updateQueryParams, ", ");
+    }
+
     private function getEntityTableName(object $entity): string
     {
         $explode = explode("\\", get_class($entity));
@@ -63,17 +111,16 @@ class BaseRepository
         return strtolower(end($explode));
     }
 
-    private function currentEntityValues($entity, bool $skipId = true): array
+    private function currentEntityValues($entity): array
     {
         $objectVars = get_mangled_object_vars($entity);
 
         $cleanedProperties = [];
 
-        $entityColumns = [];
-        $entityColumnsValues = [];
-
         foreach ($objectVars as $propertyName => $propertyValue) {
             $columnName = trim(str_replace(get_class($entity), "", $propertyName));
+            $columnName = implode('_', preg_split('/(?=[A-Z])/', $columnName));
+            $columnName = strtolower($columnName);
 
             $cleanedProperties[$columnName] = $propertyValue;
         }

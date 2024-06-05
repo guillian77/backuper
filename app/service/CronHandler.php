@@ -20,9 +20,9 @@ class CronHandler
     {
         $confRepo = new ConfigurationRepository();
 
-        $scheduleConf = $confRepo->findScheduleConf();
+        $conf = $confRepo->findAll(true);
 
-        $relatedCron = self::CRONS[$scheduleConf->getValue()];
+        $relatedCron = self::CRONS[$conf->getScheduleType()];
 
         $pluginPath = App::get()->getConfig()['plugin_path'];
 
