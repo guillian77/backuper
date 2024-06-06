@@ -51,8 +51,8 @@ class DirectoryController extends BaseController
             json_decode($this->request->post('deleted_dirs'))
         );
 
-        $this->saveDirectory($this->request->post("target_dir"), Directory::TYPE_TARGET);
-        $this->saveDirectory($this->request->post("backup_dir"), Directory::TYPE_BACKUP);
+        $this->saveDirectory($this->request->post("target_dir", []), Directory::TYPE_TARGET);
+        $this->saveDirectory($this->request->post("backup_dir", []), Directory::TYPE_BACKUP);
 
         $this->configurationRepo->upsert(
             $this->configurationSerializer->deserialize($this->request->post('conf'))
