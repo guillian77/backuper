@@ -52,7 +52,7 @@ if (!isset($argv[1]) || $commands[$argv[1]] === "help") {
 }
 
 if (isset($commands[$argv[1]])) {
-    (new $commands[$argv[1]]['namespace'])->execute();
+    (new $commands[$argv[1]]['namespace']($argv))->execute();
 
     die(0);
 }
