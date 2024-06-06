@@ -85,7 +85,7 @@ class Configuration extends BaseEntity
         return $this->encryptionKey;
     }
 
-    public function setEncryptionKey(string $encryptionKey): ?self
+    public function setEncryptionKey(?string $encryptionKey): self
     {
         $this->encryptionKey = $encryptionKey;
 
