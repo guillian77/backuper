@@ -33,7 +33,7 @@ if [ -z "$BRANCH" ]; then
 fi
 
 if [ -z "$VERSION" ]; then
-  VERSION=$(date +%Y%m%d)
+  VERSION=$(date +%Y%m%d%H%M)
 fi
 
 # Extract name from plugin file - source dir must match
