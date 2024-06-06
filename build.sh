@@ -29,7 +29,7 @@ if [[ $PLUGIN_FILE != *.plg ]]; then
 fi
 
 if [ -z "$BRANCH" ]; then
-  BRANCH="main"
+  BRANCH="master"
 fi
 
 if [ -z "$VERSION" ]; then
