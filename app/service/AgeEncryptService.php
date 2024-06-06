@@ -4,10 +4,16 @@ namespace App\Service;
 
 class AgeEncryptService implements EncryptInterface
 {
-    public function encrypt(string $key): bool
+    private string $encryptionKey;
+
+    public function __construct(string $encryptionKey)
     {
-        return true;
-//        return exec('tar -cz ${dir_path} | age -r $(age-keygen -y ${SECRET_KEY_PATH}) > "${target_dir}/${archiveName}.age"');
+        $this->encryptionKey = $encryptionKey;
+    }
+
+    public function encrypt(string $from, string $to): bool
+    {
+        return exec("tar -cz {$from} | age -r {$this->encryptionKey} > '{$to}.age'");
     }
 
     public function decrypt(): bool
