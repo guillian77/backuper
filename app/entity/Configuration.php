@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use Exception;
 
-class Configuration
+class Configuration extends BaseEntity
 {
     public const SCHEDULE_TYPE_HOURLY  = "hourly";
     public const SCHEDULE_TYPE_DAILY   = "daily";
