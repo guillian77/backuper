@@ -1,5 +1,6 @@
 <?= $varToJavascript('dirs', $dirs); ?>
 <?= $varToJavascript('conf', $conf); ?>
+<?= $varToJavascript('history', $history); ?>
 
 <link href="/plugins/backuper/assets/app.css" rel="stylesheet" />
 <script src="/plugins/backuper/assets/app.js" type= "module"  defer></script>
@@ -31,8 +32,8 @@
         </div>
 
         <div class="input-row">
-            <label for="encryption_key">Age encryption key:</label>
-            <input type="text" name="conf[encryption_key]" placeholder="Your Age key" id="encryption_key" class="backuper_conf" />
+            <label for="encryption_key" class="label-block">Age public key:</label>
+            <textarea name="conf[encryption_key]" id="encryption_key" placeholder="Your Age key" class="backuper_conf"></textarea>
             <p class="input-info">Only used when encryption is enabled.</p>
         </div>
 
@@ -63,6 +64,8 @@
         </h2>
 
         <p class="input-info">A list of target where <b>Backup</b> will be saved.</p>
+
+        <button type="submit">Save</button>
     </div>
 
     <!-- BACKUP list -->
@@ -73,17 +76,48 @@
         </h2>
 
         <p class="input-info">A list of directory to backup in <b>Target</b>.</p>
+
+        <button type="submit">Save</button>
     </div>
 
     <!-- HEALTHCHECK: Start -->
     <div class="container">
         <h2 class="title">Healthcheck</h2>
         <p>Here you can have a quick look about backup history and health.</p>
+
+        <br/>
+
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Start</th>
+                    <th scope="col">End</th>
+                    <th scope="col" class="with-title" title="How the backup has been trigger (cron, manual, web).">Type</th>
+                    <th scope="col" class="with-title" title="Number of directories has been backup.">Backup</th>
+                    <th scope="col" class="with-title" title="Number of backup purged.">Purged</th>
+                    <th scope="col" class="with-title" title="Number of targets where directories was backups.">Target</th>
+                    <th scope="col">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <? foreach($history as $key => $historyLine): ?>
+                    <tr>
+                        <td><?= $historyLine->getId(); ?></td>
+                        <td><?= $historyLine->getStartedAt()->format("Y-m-d H:m:i"); ?></td>
+                        <td><?= $historyLine->getFinishedAt()->format("Y-m-d H:m:i"); ?></td>
+                        <td><?= $historyLine->getRunType(); ?></td>
+                        <td><?= $historyLine->getBackupNumber(); ?></td>
+                        <td><?= $historyLine->getPurgedNumber(); ?></td>
+                        <td><?= $historyLine->getTargetNumber(); ?></td>
+                        <td><?= $historyLine->getStatus(); ?></td>
+                    </tr>
+                <? endforeach; ?>
+            </tbody>
+        </table>
+
     </div>
     <!-- HEALTHCHECK: End -->
-
-    <button type="submit">Save</button>
-    <button type="button">Cancel</button>
 
     <input type="hidden" id="deleted_dirs" name="deleted_dirs" value="[]" />
 </form>

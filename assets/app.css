@@ -54,6 +54,23 @@
     align-items: end;
 }
 
+.label-block {
+    display: block;
+}
+
+/**
+ * ---------------------------------------------------------------------------------
+ * TABLE
+ * ---------------------------------------------------------------------------------
+ */
+table { width: 100%; }
+table .with-title { cursor: pointer; }
+table tr td {
+    border: 1px grey dashed;
+    white-space: nowrap;
+    text-align: center;
+}
+
 /**
  * ---------------------------------------------------------------------------------
  * BUTTONS
