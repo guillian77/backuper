@@ -6,7 +6,7 @@
 <!ENTITY launch "Utilities/Backuper">
 <!ENTITY plugdir "/usr/local/emhttp/plugins/&name;">
 <!ENTITY github "guillian77/backuper">
-<!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugins/&name;.plg">
+<!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugin/&name;.plg">
 <!ENTITY md5 "f673900ddba2d3fecc0cc38a366a5153">
 ]>
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="edit" support="https://forums.unraid.net/topic/57109-plugin-custom-tab/">
@@ -26,8 +26,8 @@ rm -f $(ls /boot/config/plugins/&name;/&name;*.txz 2&gt;/dev/null | grep -v '&ve
 <!--
 The 'source' file.
 -->
-<FILE Name="/boot/config/plugins/&name;/&name;-&version;-x86_64-1.txz" Run="upgradepkg --install-new">
-<URL>https://raw.github.com/&github;/master/archive/&name;-&version;-x86_64-1.txz</URL>
+<FILE Name="/boot/config/plugins/&name;/&name;-&version;.txz" Run="upgradepkg --install-new">
+<URL>https://raw.github.com/&github;/master/archive/&name;-&version;.txz</URL>
 <MD5>&md5;</MD5>
 </FILE>
 
@@ -53,10 +53,11 @@ The 'remove' script.
 -->
 <FILE Run="/bin/bash" Method="remove">
 <INLINE>
-removepkg &name;-&version;-x86_64-1
+removepkg &name;-&version;
 rm -rf &plugdir;
 rm -rf /boot/config/plugins/&name;
 rm -rf /usr/local/emhttp/plugins/customtabtemp
 </INLINE>
-</FILE> 
+</FILE>
+
 </PLUGIN>
