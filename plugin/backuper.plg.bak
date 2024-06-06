@@ -39,12 +39,12 @@ The 'post-install' script
 echo ""
 echo "----------------------------------------------------"
 echo " &name; has been installed."
-echo " Copyright 2015-2023, Squid"
+echo " Copyright 2015-2023, Guillian Aufrère"
 echo " Version: &version;"
 echo "----------------------------------------------------"
 echo ""
-echo "Converting old configuration file"
-/usr/local/emhttp/plugins/customtab/scripts/convert.php
+echo "Initializing database."
+/usr/local/emhttp/plugins/backuper/bin/console db:migrate
 </INLINE>
 </FILE>
 
@@ -56,7 +56,7 @@ The 'remove' script.
 removepkg &name;-&version;
 rm -rf &plugdir;
 rm -rf /boot/config/plugins/&name;
-rm -rf /usr/local/emhttp/plugins/customtabtemp
+rm -rf /usr/local/emhttp/plugins/backuper
 </INLINE>
 </FILE>
 
