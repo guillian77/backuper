@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Directory;
+use App\Repository\BackupHistoryRepository;
 use App\Repository\ConfigurationRepository;
 use App\Repository\DirectoryRepository;
 use App\Serializer\ConfigurationSerializer;
@@ -10,11 +11,12 @@ use App\Serializer\DirectorySerializer;
 use App\Service\CronHandler;
 use App\Service\RequestService;
 
-class DirectoryController extends BaseControler
+class DirectoryController extends BaseController
 {
     private DirectoryRepository $directoryRepo;
     private DirectorySerializer $directorySerializer;
     private ConfigurationRepository $configurationRepo;
+    private BackupHistoryRepository $historyRepo;
     private ConfigurationSerializer $configurationSerializer;
     private RequestService $request;
     private CronHandler $cronHandler;
@@ -25,6 +27,7 @@ class DirectoryController extends BaseControler
 
         $this->directoryRepo = new DirectoryRepository();
         $this->configurationRepo = new ConfigurationRepository();
+        $this->historyRepo = new BackupHistoryRepository();
         $this->directorySerializer = new DirectorySerializer();
         $this->configurationSerializer = new ConfigurationSerializer();
         $this->request = new RequestService();
@@ -35,12 +38,10 @@ class DirectoryController extends BaseControler
     {
         ($_POST) && $this->handleSubmit();
 
-        $dirs = $this->directoryRepo->findAll();
-        $conf = $this->configurationRepo->findAll();
-
         return $this->render('backuper.html', [
-            "dirs" => $dirs,
-            "conf" => $conf,
+            "dirs" => $this->directoryRepo->findAll(),
+            "conf" => $this->configurationRepo->findAll()[0],
+            "history" => $this->historyRepo->findAll(),
         ]);
     }
 
@@ -64,7 +65,7 @@ class DirectoryController extends BaseControler
     {
         foreach ($dirs as $dirId => $dirPath) {
             $toUpdateDir = $this->directorySerializer->deserialize([
-                'id' => $dirId,
+                'id' => $dirId == "new" ? null : $dirId,
                 'path' => $dirPath,
                 'type' => $type
             ]);

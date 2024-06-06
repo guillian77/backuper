@@ -59,13 +59,13 @@ export default class Backuper {
 
     #addToDirList(type, value, id) {
         document
-            .querySelector(`#${type}_dir_list`)
-            .append(this.#createPathInput(type, value, id))
+            .querySelector(`#${type}_dir_list button`)
+            .before(this.#createPathInput(type, value, id))
     }
 
     #createPathInput(type, value, id) {
         if (!["backup", "target"].includes(type)) { throw new Error(`${type} not allowed.`) }
-        if (!id ) { id = "" }
+        if (!id ) { id = "new" }
         if (!value ) { value = "" }
 
         let input = document.createElement("input")
