@@ -26,7 +26,7 @@ class Configuration extends BaseEntity
 
     private bool $encryptEnabled;
 
-    private string $encryptionKey;
+    private ?string $encryptionKey;
 
     private int $retentionDays;
 
@@ -80,12 +80,12 @@ class Configuration extends BaseEntity
         return $this;
     }
 
-    public function getEncryptionKey(): string
+    public function getEncryptionKey(): ?string
     {
         return $this->encryptionKey;
     }
 
-    public function setEncryptionKey(string $encryptionKey): self
+    public function setEncryptionKey(string $encryptionKey): ?self
     {
         $this->encryptionKey = $encryptionKey;
 
