@@ -20,7 +20,7 @@ class CronHandler
     {
         $confRepo = new ConfigurationRepository();
 
-        $conf = $confRepo->findAll(true);
+        $conf = $confRepo->findAll(true)[0];
 
         $relatedCron = self::CRONS[$conf->getScheduleType()];
 

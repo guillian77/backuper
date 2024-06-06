@@ -3,14 +3,18 @@
 namespace App\Controller;
 
 use App\App;
+use App\Entity\BaseEntity;
+use App\Entity\EntityManager;
 
-class BaseControler
+class BaseController
 {
     private array $appConfig;
+    private EntityManager $entityManager;
 
     public function __construct()
     {
         $this->appConfig = App::get()->getConfig();
+        $this->entityManager = new EntityManager();
     }
 
     public function render(string $view, array $parameters = []): string
@@ -37,8 +41,30 @@ class BaseControler
 
     private function addVariableToTemplate(string $key, mixed $value)
     {
-        (is_array($value)) && $value = json_encode($value);
+        $value = $this->serialize($value);
+
+        $value = json_encode($value);
 
         echo "<input type='hidden' id='{$key}' data-{$key}='{$value}' />";
+    }
+
+    private function serialize($value): mixed
+    {
+        if (is_array($value)) {
+            return array_map([$this, 'serialize'], $value);
+        }
+
+        if (gettype($value) !== "object") { return $value; }
+
+        if (!is_a($value, BaseEntity::class)) { return $value; }
+
+        $basename = $this->entityManager->classBaseName($value);
+        $serializerClass = "App\\Serializer\\{$basename}Serializer";
+
+        if (!class_exists($serializerClass)) {
+            throw new \Exception("Now serializer found for $basename.");
+        }
+
+        return (new $serializerClass)->serialize($value);
     }
 }

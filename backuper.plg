@@ -1,0 +1,92 @@
+<?xml version='1.0' standalone='yes'?>
+<!DOCTYPE PLUGIN [
+  <!ENTITY name      "backup-plugin">
+  <!ENTITY author    "guillian77">
+  <!ENTITY version   "2024.06.06">
+  <!ENTITY gitURL    "https://github.com/&author;/unraid-&name;/releases/download">
+  <!ENTITY pluginURL "https://raw.githubusercontent.com/&author;/unraid-&name;/master/&name;.plg">
+  <!ENTITY md5       "c964881ae6c0ea29720a8d772df72731">
+  <!ENTITY plugin    "/boot/config/plugins/&name;">
+  <!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
+]>
+
+<PLUGIN  name="&name;" author="&author;" version="&version;" pluginURL="&pluginURL;" min="6.9.0" support="https://github.com/&author;/unraid-&name;/issues">
+
+<CHANGES>
+
+###2023.06.11
+- First public beta version
+
+</CHANGES>
+
+<FILE Run="/bin/bash">
+<INLINE>
+rm -f $(ls /boot/config/plugins/&name;/&name;*.tgz 2>/dev/null|grep -v '&version;')
+</INLINE>
+</FILE>
+
+<FILE Name="/boot/config/plugins/&name;/&name;-&version;.tgz" Run="upgradepkg --install-new">
+<URL>&gitURL;/&version;/&name;-&version;.tgz</URL>
+<MD5>&md5;</MD5>
+</FILE>
+
+<FILE Name="&emhttp;/README.md">
+<INLINE>
+**NVTOP**
+
+NVTOP stands for Neat Videocard TOP, a (h)top like task monitor for AMD, Intel and NVIDIA GPUs. It can handle multiple GPUs and print information about them in a htop familiar way.
+This Plugin is based on: https://github.com/Syllo/nvtop
+</INLINE>
+</FILE>
+
+<FILE Run="/bin/bash">
+<INLINE>
+
+if [ ! -d /boot/config/plugins/radeontop ] &amp;&amp; [ ! -d /boot/config/plugins/intel-gpu-top ] &amp;&amp; [ ! -d /boot/config/plugins/nvidia-driver ]; then
+  echo "---------------------------------------------------------------------------------------"
+  echo "| ERROR - ERROR - ERROR - ERROR - ERROR - ERROR - ERROR - ERROR - ERROR - ERROR - ERROR"
+  echo "|"
+  echo "| No vendor utility installed! Please install at least on of the following three"
+  echo "| plugins form the CA App that NVTOP (Neat Videocard TOP) is able to work properly:"
+  echo "|"
+  echo "| - Radeon-TOP"
+  echo "| - Intel-GPU-TOP"
+  echo "| - Nvidia-Driver"
+  echo "|"
+  echo "| ERROR - ERROR - ERROR - ERROR - ERROR - ERROR - ERROR - ERROR - ERROR - ERROR - ERROR"
+  echo "---------------------------------------------------------------------------------------"
+  removepkg &name;-&version; 2>/dev/null
+  rm -rf &emhttp;
+  rm -rf &plugin;
+  exit 1
+fi
+
+if [ ! -L /root/.config/nvtop/interface.ini ]; then
+  if [ ! -d /root/.config/nvtop ]; then
+    mkdir -p /root/.config/nvtop
+  fi
+  ln -s &plugin;/interface.ini /root/.config/nvtop/interface.ini
+fi
+
+</INLINE>
+</FILE>
+
+<FILE Run="/bin/bash" Method="remove">
+<INLINE>
+
+echo "------------------------"
+echo "---Uninstalling NVTOP---"
+echo "------------------------"
+# Remove plugin related files
+removepkg &name;-&version;
+rm -rf &emhttp;
+rm -rf &plugin;
+echo
+echo "---------------------------------------"
+echo "---Uninstallation of NVTOP complete!---"
+echo "---------------------------------------"
+echo
+
+</INLINE>
+</FILE>
+</PLUGIN>

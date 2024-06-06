@@ -3,30 +3,55 @@
 namespace App\Repository;
 
 use App\App;
+use App\Entity\EntityManager;
 use Src\Database;
 
 class BaseRepository
 {
     public Database $db;
+    private EntityManager $entityManager;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->db = App::get()->getDb();
+
+        $this->entityManager = new EntityManager();
     }
 
-    public function upsert(object $entity): void
+    public function select(string $query): array
     {
-        $existingRow = $this->db->conn
-            ->query("SELECT id FROM {$this->getEntityTableName($entity)} WHERE id = {$entity->getId()}")
-            ->fetchArray(SQLITE3_ASSOC);
+        $results = $this->db->conn->query($query);
 
-        if ($existingRow) {
+        $formattedData = [];
+
+        $entityName = $this->entityManager->entityFromRepo($this);
+
+        while($row = $results->fetchArray(SQLITE3_ASSOC)) {
+            $formattedData[] = $this->entityManager->arrayToEntity($row, $entityName);
+        }
+
+        return $formattedData;
+    }
+
+    public function findAll(): object | array
+    {
+        $tableName = $this->entityManager->repoToTable($this);
+
+        return $this->select("SELECT * FROM $tableName;");
+    }
+
+    public function upsert(object $entity): object
+    {
+        $isPersisted = !($entity->getId() === 0 || !$entity->getId());
+
+        if ($isPersisted) {
             $this->update($entity);
 
-            return;
+            return $entity;
         }
 
         $this->save($entity);
+
+        return $entity;
     }
 
     public function update(object $entity): void
@@ -40,7 +65,9 @@ class BaseRepository
         foreach ($columnNames as $columnName) {
             $valueToSave = $entityState[$columnName];
 
-            $stmt->bindParam(":{$columnName}", $valueToSave);
+            $this->convertType($valueToSave);
+
+            $stmt->bindParam(":{$columnName}", $valueToSave, $this->associateType($valueToSave));
 
             unset($valueToSave);
         }
@@ -66,12 +93,36 @@ class BaseRepository
         foreach ($columnNames as $columnName) {
             $valueToSave = $entityState[$columnName];
 
-            $stmt->bindParam(":{$columnName}", $valueToSave);
+            $this->convertType($valueToSave);
+
+            $stmt->bindParam(":{$columnName}", $valueToSave, $this->associateType($valueToSave));
 
             unset($valueToSave);
         }
 
         $stmt->execute();
+
+        $entity->setId($this->db->conn->lastInsertRowID());
+    }
+
+    private function associateType(mixed $value): int
+    {
+        switch (gettype($value)) {
+            case "integer":
+            case "boolean":
+                return SQLITE3_INTEGER;
+            default:
+                return SQLITE3_TEXT;
+        }
+    }
+
+    private function convertType(mixed &$value): mixed
+    {
+        if (is_a($value, 'DateTime')) {
+            $value = $value->format('Y-m-d H:i:s');
+        }
+
+        return $value;
     }
 
     private function getPreparedInsert(array $columnNames): string
@@ -108,7 +159,10 @@ class BaseRepository
     {
         $explode = explode("\\", get_class($entity));
 
-        return strtolower(end($explode));
+        $tableName = end($explode);
+        $tableName = implode('_', preg_split('/(?=[A-Z])/', $tableName));
+
+        return  strtolower(trim($tableName, "_"));
     }
 
     private function currentEntityValues($entity): array

@@ -6,11 +6,6 @@ use App\Entity\Directory;
 
 class DirectoryRepository extends BaseRepository
 {
-    public function findAll(): array
-    {
-        return $this->db->select("SELECT * FROM directory;");
-    }
-
     /**
      * @param string $type
      *
@@ -18,7 +13,7 @@ class DirectoryRepository extends BaseRepository
      */
     public function findByType(string $type): array
     {
-        return $this->db->select("SELECT * FROM directory WHERE type = '{$type}';", Directory::class);
+        return $this->select("SELECT * FROM directory WHERE type = '{$type}';");
     }
 
     public function deleteByIds(array $ids)
