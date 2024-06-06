@@ -39,7 +39,7 @@ The 'post-install' script
 echo ""
 echo "----------------------------------------------------"
 echo " &name; has been installed."
-echo " Copyright 2015-2023, Guillian Aufrère"
+echo " Copyright 2015-2024, Guillian Aufrère"
 echo " Version: &version;"
 echo "----------------------------------------------------"
 echo ""
