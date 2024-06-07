@@ -1,7 +1,10 @@
 # Unraid - Backuper
 
-## Work In Progress project
+Allow you to manage directories to save in one or multiple targets.
 
-A very simple plugin to allow you to place any webpage (or web app's GUI) onto the tabs of unRaid's GUI
+You can configure:
+- schedule period
+- enable purge
+- enable encryption (with age)
 
-
+You can monitor backups with a quick backup history overview.
