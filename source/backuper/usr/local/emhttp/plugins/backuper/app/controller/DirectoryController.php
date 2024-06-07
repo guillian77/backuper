@@ -65,7 +65,7 @@ class DirectoryController extends BaseController
     {
         foreach ($dirs as $dirId => $dirPath) {
             $toUpdateDir = $this->directorySerializer->deserialize([
-                'id' => $dirId == "new" ? null : $dirId,
+                'id' => $dirId,
                 'path' => $dirPath,
                 'type' => $type
             ]);

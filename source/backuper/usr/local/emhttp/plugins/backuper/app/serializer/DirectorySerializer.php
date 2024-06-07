@@ -44,10 +44,13 @@ class DirectorySerializer
      */
     public function deserialize(array $directory): Directory
     {
-        return (new Directory())
-            ->setId($directory['id'] ?? 0)
+        $directoryEntity = new Directory();
+
+        ($directory['id'] !== "new") && $directoryEntity->setId($directory['id']);
+
+        return $directoryEntity
             ->setPath($directory['path'])
             ->setType($directory['type'])
-            ;
+        ;
     }
 }

@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\App;
 use App\Entity\EntityManager;
+use ReflectionProperty;
 use Src\Database;
 
 class BaseRepository
@@ -41,9 +42,7 @@ class BaseRepository
 
     public function upsert(object $entity): object
     {
-        $isPersisted = !($entity->getId() === 0 || !$entity->getId());
-
-        if ($isPersisted) {
+        if ($this->isInitialized($entity)) {
             $this->update($entity);
 
             return $entity;
@@ -103,6 +102,11 @@ class BaseRepository
         $stmt->execute();
 
         $entity->setId($this->db->conn->lastInsertRowID());
+    }
+
+    private function isInitialized(object $entity): bool
+    {
+        return (new ReflectionProperty($entity, "id"))->isInitialized($entity);
     }
 
     private function associateType(mixed $value): int
