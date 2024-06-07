@@ -1,5 +1,4 @@
-DROP TABLE IF EXISTS backup_history;
-CREATE TABLE backup_history(
+CREATE TABLE IF NOT EXISTS backup_history(
     id INTEGER PRIMARY KEY,
     started_at DATETIME NOT NULL,
     finished_at DATETIME,

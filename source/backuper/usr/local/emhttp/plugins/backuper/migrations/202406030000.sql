@@ -1,12 +1,10 @@
-DROP TABLE IF EXISTS directory;
-CREATE TABLE directory(
+CREATE TABLE IF NOT EXISTS directory(
     id INTEGER PRIMARY KEY,
     path TEXT NOT NULL,
     type TEXT NOT NULL
 );
 
-DROP TABLE IF EXISTS configuration;
-CREATE TABLE configuration(
+CREATE TABLE IF NOT EXISTS configuration(
     id INTEGER NOT NULL,
     backup_enabled INTEGER NOT NULL DEFAULT true,
     purge_enabled INTEGER NOT NULL DEFAULT true,
