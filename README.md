@@ -8,4 +8,3 @@ You can configure:
 - enable encryption (with age)
 
 You can monitor backups with a quick backup history overview.
-
