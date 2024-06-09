@@ -1,0 +1,16 @@
+Menu="Utilities"
+Title="BackuperTriggerBackup"
+Icon="edit"
+---
+<?php
+
+$plugin = 'backuper';
+$cfg = parse_plugin_cfg($plugin);
+
+require "plugins/backuper/app/App.php";
+
+\App\App::get()->boot("plugins/backuper");
+
+(new \app\controller\WebCommandController())->dispatch();
+
+?>

@@ -30,6 +30,12 @@
  * INPUTS
  * ---------------------------------------------------------------------------------
  */
+.container input, .container select {
+    border: 1px solid rgba(0, 0 , 0, 0.4);
+    background-color: #fff;
+    padding: 5px;
+}
+
 .input-category .title {
     text-transform: uppercase;
 }
@@ -45,10 +51,6 @@
     margin: 0;
 }
 
-.input-row.checkbox {
-    /*border: 1px solid red;*/
-}
-
 .input-list-container {
     display: flex;
     align-items: end;
@@ -57,6 +59,25 @@
 .label-block {
     display: block;
 }
+
+    /**
+     * --- ENCRYPT
+     */
+    .hidden-section {
+        border-left: 1px solid grey;
+        display: none;
+        margin-bottom: 20px;
+        padding: 8px 8px 3px;
+        position: relative;
+    }
+
+    /* Avoid default Unraid buttons margins */
+    #encrypt-section .input-info { margin-bottom: 16px; }
+    
+    #encrypt-section textarea {
+        margin-top: 5px;
+        padding: 5px;
+    }
 
 /**
  * ---------------------------------------------------------------------------------

@@ -6,6 +6,16 @@ use App\Entity\Directory;
 
 class DirectoryRepository extends BaseRepository
 {
+    public function findTargetsDirs()
+    {
+        return $this->findByType(Directory::TYPE_TARGET);
+    }
+
+    public function findBackupsDirs()
+    {
+        return $this->findByType(Directory::TYPE_BACKUP);
+    }
+
     /**
      * @param string $type
      *

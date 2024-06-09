@@ -6,5 +6,5 @@ interface EncryptInterface
 {
     public function encrypt(string $from, string $to): bool;
 
-    public function decrypt(): bool;
+    public function decrypt(string $from, string $to): bool;
 }

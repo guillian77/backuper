@@ -1,13 +1,34 @@
 <?= $varToJavascript('dirs', $dirs); ?>
 <?= $varToJavascript('conf', $conf); ?>
 <?= $varToJavascript('history', $history); ?>
+<?= $varToJavascript('age_file', $age_file); ?>
 
 <link href="/plugins/backuper/assets/app.css" rel="stylesheet" />
 <script src="/plugins/backuper/assets/app.js" type= "module" defer></script>
 
 <form id="backuper-form" action method="post">
 
-    <div id="alert-container"></div>
+    <div id="alert-container">
+        <? foreach($flashes as $flash): ?>
+        <p class="alert-message container <?= $flash['type']; ?>"><?= $flash['message']; ?></p>
+        <? endforeach; ?>
+    </div>
+
+    <div class="container">
+        <h2 class="title">Manual Control</h2>
+
+        <p>
+            All operations are automatically triggered related to configuration below.
+            <br/>
+            But, you can manually run theses operations.
+        </p>
+
+        <a class="button" href="/BackuperCommand?action=all">Start all</a>
+        <a class="button" href="/BackuperCommand?action=backup">Start backup</a>
+        <a class="button" href="/BackuperCommand?action=purge">Start purge</a>
+
+        <p>&nbsp;</p>
+    </div>
 
     <!-- CONFIGURATION: Start -->
     <div class="container input-category">
@@ -16,31 +37,42 @@
         <div class="input-row checkbox">
             <label for="backup_enabled">Backup:</label>
             <input type="checkbox" name="conf[backup_enabled]" id="backup_enabled" class="backuper_conf">
-            <p class="input-info">Backup is enabled when this checkbox is ticket.</p>
+            <p class="input-info">Backup allow to compress/encrypt a source directory to a target.</p>
         </div>
 
         <div class="input-row checkbox">
             <label for="purge_enabled">Purge:</label>
             <input type="checkbox" name="conf[purge_enabled]" id="purge_enabled" class="backuper_conf">
-            <p class="input-info">Purge is enabled when this checkbox is ticket.</p>
+            <p class="input-info">Purge allow to remove older backup files.</p>
+        </div>
+
+        <div id="purge-section" class="hidden-section">
+            <div class="input-row">
+                <label for="retention_days" class="label-block">Retention days:</label>
+                <input type="number" name="conf[retention_days]" placeholder="7" id="retention_days" class="backuper_conf" />
+                <p class="input-info">Retention in day(s) before purging old backups.</p>
+            </div>
         </div>
 
         <div class="input-row checkbox">
             <label for="encrypt_enabled">Encrypt:</label>
             <input type="checkbox" name="conf[encrypt_enabled]" id="encrypt_enabled" class="backuper_conf">
-            <p class="input-info">Archive encryption is enabled when this checkbox is ticket.</p>
         </div>
 
-        <div class="input-row">
-            <label for="encryption_key" class="label-block">Age public key:</label>
-            <textarea name="conf[encryption_key]" id="encryption_key" placeholder="Your Age key" class="backuper_conf"></textarea>
-            <p class="input-info">Only used when encryption is enabled.</p>
-        </div>
+        <div id="encrypt-section" class="hidden-section">
+            <div class="input-row">
+                <label for="encryption_key" class="label-block">Age public key:</label>
+                <textarea name="conf[encryption_key]" id="encryption_key" placeholder="Your Age key" class="backuper_conf"></textarea>
+            </div>
 
-        <div class="input-row">
-            <label for="retention_days">Retention days:</label>
-            <input type="number" name="conf[retention_days]" placeholder="7" id="retention_days" class="backuper_conf" />
-            <p class="input-info">Retention in day(s) before purging old backups. Only if Purge enabled.</p>
+            <p class="input-info">
+                Age public key only used to encrypt your directory when performing backup.<br/>
+                <span class="warning">WARNING</span> It's HIGHLY recommended to download and secure entire age file.<br/>
+                Age file is used to decrypt back your backup when needed.
+            </p>
+
+            <a class="button" href="<?= $age_file; ?>" download="age_key.txt">Export Age file</a>
+            <a class="button disabled" id="age_file_import">Import an Age file</a>
         </div>
 
         <div class="input-row">
@@ -81,7 +113,7 @@
     </div>
 
     <!-- HEALTHCHECK: Start -->
-    <div class="container">
+    <div class="container" id="healthcheck">
         <h2 class="title">Healthcheck</h2>
         <p>Here you can have a quick look about backup history and health.</p>
 
@@ -90,9 +122,7 @@
         <table>
             <thead>
                 <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Start</th>
-                    <th scope="col">End</th>
+                    <th scope="col">Duration</th>
                     <th scope="col" class="with-title" title="How the backup has been trigger (cron, manual, web).">Type</th>
                     <th scope="col" class="with-title" title="Number of directories has been backup.">Backup</th>
                     <th scope="col" class="with-title" title="Number of backup purged.">Purged</th>
@@ -103,9 +133,7 @@
             <tbody>
                 <? foreach($history as $key => $historyLine): ?>
                     <tr>
-                        <td><?= $historyLine->getId(); ?></td>
-                        <td><?= $historyLine->getStartedAt()->format("Y-m-d H:m:i"); ?></td>
-                        <td><?= $historyLine->getFinishedAt()->format("Y-m-d H:m:i"); ?></td>
+                        <td><?= $historyLine->getFinishedAt() ? $historyLine->getDuration() . "&#9989;" : "In progress &#x231B;"; ?></td>
                         <td><?= $historyLine->getRunType(); ?></td>
                         <td><?= $historyLine->getBackupNumber(); ?></td>
                         <td><?= $historyLine->getPurgedNumber(); ?></td>

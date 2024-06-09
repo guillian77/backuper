@@ -2,14 +2,18 @@
 
 namespace App\Controller;
 
+use App\Entity\Configuration;
 use App\Entity\Directory;
 use App\Repository\BackupHistoryRepository;
 use App\Repository\ConfigurationRepository;
 use App\Repository\DirectoryRepository;
 use App\Serializer\ConfigurationSerializer;
 use App\Serializer\DirectorySerializer;
+use App\Service\AgeEncryptService;
 use App\Service\CronHandler;
+use app\service\FlashBagService;
 use App\Service\RequestService;
+use Exception;
 
 class DirectoryController extends BaseController
 {
@@ -20,6 +24,8 @@ class DirectoryController extends BaseController
     private ConfigurationSerializer $configurationSerializer;
     private RequestService $request;
     private CronHandler $cronHandler;
+    private AgeEncryptService $encryptService;
+    private FlashBagService $flashBag;
 
     public function __construct()
     {
@@ -32,17 +38,52 @@ class DirectoryController extends BaseController
         $this->configurationSerializer = new ConfigurationSerializer();
         $this->request = new RequestService();
         $this->cronHandler = new CronHandler();
+        $this->encryptService = new AgeEncryptService();
+        $this->flashBag = new FlashBagService();
     }
 
+    /**
+     * @throws Exception
+     */
     public function index(): string
     {
         ($_POST) && $this->handleSubmit();
 
+        $conf = $this->configurationRepo->findAll()[0];
+
+        $this->createKeyIfNotExist($conf);
+
         return $this->render('backuper.html', [
             "dirs" => $this->directoryRepo->findAll(),
-            "conf" => $this->configurationRepo->findAll()[0],
-            "history" => $this->historyRepo->findAll(),
+            "conf" => $conf,
+            "history" => $this->historyRepo->findAll(limit: 10, orderBy: "id DESC"),
+            "age_file" => "data:text/plain;base64," . base64_encode($this->encryptService->getEntireKey()),
+            "flashes" => $this->flashBag->read(),
         ]);
+    }
+
+    /**
+     * Generate an age key file if not exist yet.
+     *
+     * @param Configuration $conf
+     *
+     * @return void
+     *
+     * @throws Exception
+     */
+    private function createKeyIfNotExist(Configuration $conf): void
+    {
+        if ($conf->getEncryptionKey()) {
+            return;
+        }
+
+        $key = $this->encryptService
+            ->generateKeyFile()
+            ->getPublicKey();
+
+        $conf
+            ->setEncryptionKey($key)
+            ->upsert();
     }
 
     private function handleSubmit(): void

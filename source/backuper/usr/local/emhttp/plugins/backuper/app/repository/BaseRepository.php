@@ -33,11 +33,13 @@ class BaseRepository
         return $formattedData;
     }
 
-    public function findAll(): object | array
+    public function findAll(int $limit = 20, string $orderBy = null): object | array
     {
         $tableName = $this->entityManager->repoToTable($this);
 
-        return $this->select("SELECT * FROM $tableName;");
+        if ($orderBy) { $orderBy = " ORDER BY $orderBy"; }
+
+        return $this->select("SELECT * FROM $tableName $orderBy LIMIT $limit");
     }
 
     public function upsert(object $entity): object

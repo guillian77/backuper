@@ -17,7 +17,7 @@ class DbTableTruncate extends BaseCommand
     public string $commandDescription = "Allow to truncate db specific table.";
     public function execute(): void
     {
-        $tableName = $this->getParameter(2);
+        $tableName = $this->getPositionalParameter(2);
 
         if (!$tableName) {
             $this->output->error("A table should be specified.");
