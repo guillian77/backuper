@@ -77,6 +77,7 @@
 
         <div class="input-row">
             <select name="conf[schedule_type]" class="backuper_conf">
+                <? if ($dev): ?> <option value="minute">Minute</option><? endif; ?>
                 <option value="hourly">Hourly</option>
                 <option value="daily">Daily</option>
                 <option value="monthly">Monthly</option>
@@ -122,6 +123,7 @@
         <table>
             <thead>
                 <tr>
+                    <th scope="col">Start</th>
                     <th scope="col">Duration</th>
                     <th scope="col" class="with-title" title="How the backup has been trigger (cron, manual, web).">Type</th>
                     <th scope="col" class="with-title" title="Number of directories has been backup.">Backup</th>
@@ -133,6 +135,7 @@
             <tbody>
                 <? foreach($history as $key => $historyLine): ?>
                     <tr>
+                        <td><?= $historyLine->getStartedAt()->format('Y-m-d H:i:s'); ?></td>
                         <td><?= $historyLine->getFinishedAt() ? $historyLine->getDuration() . "&#9989;" : "In progress &#x231B;"; ?></td>
                         <td><?= $historyLine->getRunType(); ?></td>
                         <td><?= $historyLine->getBackupNumber(); ?></td>

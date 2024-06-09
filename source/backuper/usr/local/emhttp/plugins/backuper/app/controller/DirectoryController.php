@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\App;
 use App\Entity\Configuration;
 use App\Entity\Directory;
 use App\Repository\BackupHistoryRepository;
@@ -59,6 +60,7 @@ class DirectoryController extends BaseController
             "history" => $this->historyRepo->findAll(limit: 10, orderBy: "id DESC"),
             "age_file" => "data:text/plain;base64," . base64_encode($this->encryptService->getEntireKey()),
             "flashes" => $this->flashBag->read(),
+            "dev" => App::get()->getConfig()['dev_mode']
         ]);
     }
 

@@ -6,12 +6,14 @@ use Exception;
 
 class Configuration extends BaseEntity
 {
+    public const SCHEDULE_TYPE_MINUTE  = "minute";
     public const SCHEDULE_TYPE_HOURLY  = "hourly";
     public const SCHEDULE_TYPE_DAILY   = "daily";
     public const SCHEDULE_TYPE_MONTHLY = "monthly";
     public const SCHEDULE_TYPE_YEARLY  ="yearly";
 
     public const SCHEDULE_TYPES = [
+        self::SCHEDULE_TYPE_MINUTE,
         self::SCHEDULE_TYPE_HOURLY,
         self::SCHEDULE_TYPE_DAILY,
         self::SCHEDULE_TYPE_MONTHLY,
