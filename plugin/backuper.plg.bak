@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name "backuper">
 <!ENTITY author "Guillian Aufrère">
-<!ENTITY version "202406092345">
+<!ENTITY version "202406092347">
 <!ENTITY launch "Utilities/Backuper">
 <!ENTITY plugdir "/usr/local/emhttp/plugins/&name;">
 <!ENTITY github "guillian77/backuper">
