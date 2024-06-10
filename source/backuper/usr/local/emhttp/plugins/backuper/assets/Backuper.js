@@ -79,6 +79,13 @@ export default class Backuper {
         let removeButton = document.createElement("span")
             removeButton.classList.add("icon-u-delete", "btn", "remove")
             removeButton.setAttribute('data-id', id)
+            removeButton.title = `Remove this ${type} directory.`
+
+        let visualizeIcon = document.createElement("a")
+            visualizeIcon.classList.add("icon-folder", "btn")
+            visualizeIcon.href = "Main/Browse?dir=" + encodeURIComponent(value)
+            visualizeIcon.target = "_blank"
+            visualizeIcon.title = "Explore target directory."
 
         removeButton.addEventListener("click", e => { this.#deleteDir(e.target) })
 
@@ -86,6 +93,7 @@ export default class Backuper {
             container.classList.add("input-list-container")
             container.append(input)
             container.append(removeButton)
+            if (type === "target") container.append(visualizeIcon)
             container.dataset['type'] = type
 
         return container

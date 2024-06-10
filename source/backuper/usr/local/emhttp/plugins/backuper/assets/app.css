@@ -3,6 +3,13 @@
  * GLOBAL
  * ---------------------------------------------------------------------------------
  */
+:root {
+    --color-error: #f44336;
+    --color-warning: #ff9800;
+    --color-info: #2196F3;
+    --color-success: #4CAF50;
+}
+
 .container {
     background-color: rgba(227,227,227, 0.8);
     padding: 8px 20px;
@@ -20,10 +27,10 @@
  * ---------------------------------------------------------------------------------
  */
 .alert-message { font-weight: bold; color: #FFFFFF; }
-.alert-message.error { background-color: #f44336; }
-.alert-message.warning { background-color: #ff9800; }
-.alert-message.info { background-color: #2196F3; }
-.alert-message.success { background-color: #4CAF50; }
+.alert-message.error { background-color: var(--color-error); }
+.alert-message.warning { background-color: var(--color-warning); }
+.alert-message.info { background-color: var(--color-info); }
+.alert-message.success { background-color: var(--color-success); }
 
 /**
  * ---------------------------------------------------------------------------------
@@ -104,9 +111,12 @@ table tr td {
     cursor: pointer;
     padding: 5px;
     transition: .3s;
+    opacity: 0.8;
 }
+.btn:hover { opacity: 1; text-decoration: none; }
 
 .btn.add { background-color: #579b1f; font-size: 12px }
-.btn.add:hover { background-color: #3b8303; }
-.btn.remove { background-color: #ff9900; }
-.btn.remove:hover { background-color: #C2801FFF; }
+/*.btn.add:hover { background-color: #3b8303; }*/
+.btn.folder { background-color: #ff9900; }
+/*.btn.folder:hover { background-color: #C2801FFF; }*/
+.btn.remove { background-color: var(--color-error); }
