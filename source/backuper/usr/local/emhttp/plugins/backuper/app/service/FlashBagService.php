@@ -4,10 +4,12 @@ namespace app\service;
 
 class FlashBagService
 {
+    const TYPE_INFO = "info";
     const TYPE_SUCCESS = "success";
     const TYPE_ERROR = "error";
 
     const FLASH_TYPES = [
+        self::TYPE_INFO,
         self::TYPE_SUCCESS,
         self::TYPE_ERROR,
     ];

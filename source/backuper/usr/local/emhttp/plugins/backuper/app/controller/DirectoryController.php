@@ -13,6 +13,7 @@ use App\Serializer\DirectorySerializer;
 use App\Service\AgeEncryptService;
 use App\Service\CronHandler;
 use app\service\FlashBagService;
+use app\service\PackageVersionService;
 use App\Service\RequestService;
 use Exception;
 
@@ -27,6 +28,7 @@ class DirectoryController extends BaseController
     private CronHandler $cronHandler;
     private AgeEncryptService $encryptService;
     private FlashBagService $flashBag;
+    private PackageVersionService $version;
 
     public function __construct()
     {
@@ -41,6 +43,7 @@ class DirectoryController extends BaseController
         $this->cronHandler = new CronHandler();
         $this->encryptService = new AgeEncryptService();
         $this->flashBag = new FlashBagService();
+        $this->version = new PackageVersionService();
     }
 
     /**
@@ -48,6 +51,8 @@ class DirectoryController extends BaseController
      */
     public function index(): string
     {
+        $this->displayVersionFlash();
+
         ($_POST) && $this->handleSubmit();
 
         $conf = $this->configurationRepo->findAll()[0];
@@ -62,6 +67,18 @@ class DirectoryController extends BaseController
             "flashes" => $this->flashBag->read(),
             "dev" => App::get()->getConfig()['dev_mode']
         ]);
+    }
+
+    private function displayVersionFlash(): void
+    {
+        if (!$this->version->hasNew()) {
+            return;
+        }
+
+        $message  = "A new version of Backuper is available.";
+        $message .= " <a href='/Plugins'>Update Backuper</a>";
+
+        $this->flashBag->add("info", $message);
     }
 
     /**
