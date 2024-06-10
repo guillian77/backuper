@@ -41,7 +41,7 @@ class App
 
     public function getDb(): Database
     {
-        return $this->db = new Database("{$this->pluginPath}/backuper.sqlite3");
+        return $this->db = new Database("{$this->config['plugin_path_boot']}/backuper.sqlite3");
     }
 
     public function getConfig(): array
