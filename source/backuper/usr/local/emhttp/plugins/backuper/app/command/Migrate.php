@@ -61,7 +61,7 @@ class Migrate extends BaseCommand
     {
         $migrationContent = file_get_contents( "{$this->migrationPath}/{$migrationFile}");
 
-        $executed = App::get()->getDb()->conn->query($migrationContent);
+        $executed = $this->conn->query($migrationContent);
 
         if ($executed) { return; }
 

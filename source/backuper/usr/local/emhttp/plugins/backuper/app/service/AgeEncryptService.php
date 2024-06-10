@@ -107,6 +107,11 @@ class AgeEncryptService implements EncryptInterface
         return file_get_contents($this->keyPath);
     }
 
+    public function hasEncryptionFile(): bool
+    {
+        return file_exists($this->keyPath);
+    }
+
     /**
      * Allow to import existing age key file to the plugin.
      *
@@ -116,15 +121,15 @@ class AgeEncryptService implements EncryptInterface
      */
     public function importKeyFile(array $keyFile)
     {
-
+        // TODO
     }
 
     private function throwUnlessKeyFile(): void
     {
-        if (file_exists($path = $this->keyPath)) {
+        if ($this->hasEncryptionFile()) {
             return;
         }
 
-        throw new Exception("Unable to found age key file $path");
+        throw new Exception("Unable to found age key file {$this->keyPath}");
     }
 }

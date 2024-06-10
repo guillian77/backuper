@@ -75,7 +75,9 @@ class DirectoryController extends BaseController
      */
     private function createKeyIfNotExist(Configuration $conf): void
     {
-        if ($conf->getEncryptionKey()) {
+        if ($this->encryptService->hasEncryptionFile()) {
+            $this->flashBag->add(FlashBagService::TYPE_SUCCESS, "Age encryption key has been generated.");
+
             return;
         }
 

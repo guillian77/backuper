@@ -10,6 +10,7 @@ class DbTableTruncate extends BaseCommand
         'backup_history',
         'configuration',
         'directory',
+        'migration',
     ];
 
     public string $commandName = "db:table:truncate";
