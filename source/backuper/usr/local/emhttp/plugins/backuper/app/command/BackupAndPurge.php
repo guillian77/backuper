@@ -23,7 +23,7 @@ class BackupAndPurge extends BaseCommand
 
     public function commandUsage(): string
     {
-        $usage  = "    -e --encrypt - Enable backup with age encryption.\n";
+        $usage  = "    -e | --encrypt - Enable backup with age encryption.\n";
         $usage .= "    --days=<DAY_NUMBER (default: 7)> - Allow to specify retention day.";
 
         return $usage;

@@ -16,7 +16,7 @@ class Backup extends BaseCommand
 
     public function commandUsage(): string
     {
-        return "    -e --encrypt - Enable backup with age encryption.";
+        return "    -e | --encrypt - Enable backup with age encryption.";
     }
 
     public function execute(): void

@@ -30,11 +30,11 @@ abstract class BaseCommand
         $this->conn = App::get()->getDb()->conn;
 
         if ($this->getOption("help") || $this->hasArgument("h")) {
-            echo $this->commandName . "\n\n";
+            echo $this->commandName . "\n";
 
             echo $this->commandUsage() . "\n";
 
-            echo "    -h --help - Display help for this command.\n";
+            echo "    -h | --help - Display help for this command.\n";
 
             die();
         }

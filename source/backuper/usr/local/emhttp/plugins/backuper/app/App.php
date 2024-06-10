@@ -59,7 +59,7 @@ class App
     private function loadRequiredFiles()
     {
         // Manually load required files because compose is not available under Unraid OS (Phar ext.).
-        require "{$this->pluginPath}/src/dev.php";
+        require "{$this->pluginPath}/src/functions.php";
         require "{$this->pluginPath}/src/Database.php";
 
         set_include_path($this->pluginPath . PATH_SEPARATOR . "app");
