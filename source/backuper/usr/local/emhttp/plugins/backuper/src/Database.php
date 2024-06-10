@@ -1,6 +1,6 @@
 <?php
 
-namespace Src;
+namespace src;
 
 use Exception;
 use SQLite3;
@@ -12,7 +12,7 @@ class Database
     public function __construct(string $db_file)
     {
         if (!file_exists($db_file)) {
-            throw new Exception("Missing database file.");
+            file_put_contents($db_file, "");
         }
 
         $this->conn = new SQLite3($db_file);
