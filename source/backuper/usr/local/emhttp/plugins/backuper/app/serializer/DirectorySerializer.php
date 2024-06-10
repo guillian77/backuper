@@ -46,7 +46,7 @@ class DirectorySerializer
     {
         $directoryEntity = new Directory();
 
-        ($directory['id'] !== "new") && $directoryEntity->setId($directory['id']);
+        (!str_starts_with($directory['id'], "new")) && $directoryEntity->setId($directory['id']);
 
         return $directoryEntity
             ->setPath($directory['path'])

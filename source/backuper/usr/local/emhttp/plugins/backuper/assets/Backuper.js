@@ -64,8 +64,9 @@ export default class Backuper {
     }
 
     #createPathInput(type, value, id) {
+        let random = Math.floor(Math.random() * (new Date()).getTime())
         if (!["backup", "target"].includes(type)) { throw new Error(`${type} not allowed.`) }
-        if (!id ) { id = "new" }
+        if (!id ) { id = `new-${random}` }
         if (!value ) { value = "" }
 
         let input = document.createElement("input")
