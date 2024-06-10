@@ -65,7 +65,7 @@ class BackupService
          */
         if (!$encrypt) {
             exec("cd {$fileDirName} && tar czf {$archiveFileName} $fileBaseName");
-            exec("cp {$fileDirName}/{$archiveFileName} $to");
+            exec("mv {$fileDirName}/{$archiveFileName} $to");
 
             return file_exists("$to/$archiveFileName");
         }
