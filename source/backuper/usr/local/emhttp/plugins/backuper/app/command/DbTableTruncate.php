@@ -26,6 +26,7 @@ class DbTableTruncate extends BaseCommand
 
     public function execute(): void
     {
+        $this->output->info("Available tables: " . implode(", ", self::DB_TABLES));
         $selectedTables = readline("Table Name (all) :");
 
         if (!$selectedTables) { $this->output->error("Table(s) should be specified."); return; }

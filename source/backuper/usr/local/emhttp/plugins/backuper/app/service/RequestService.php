@@ -24,4 +24,18 @@ class RequestService
 
         return $_POST[$key];
     }
+
+    /**
+     * HTML Redirection to a target page.
+     *
+     * Trick redirection because Unraid already set HTTP Headers.
+     *
+     * @param string $url target page.
+     *
+     * @return void
+     */
+    public function redirect(string $url): void
+    {
+        echo "<meta http-equiv='refresh' content='0; URL=$url'>";
+    }
 }

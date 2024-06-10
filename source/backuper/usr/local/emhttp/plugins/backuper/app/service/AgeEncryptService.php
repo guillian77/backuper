@@ -11,7 +11,7 @@ class AgeEncryptService implements EncryptInterface
 
     public function __construct()
     {
-        $pluginPath = App::get()->getConfig()['plugin_path_boot'];
+        $pluginPath = App::get()->getConfig()['plugin_path_flash'];
 
         $this->keyPath = "{$pluginPath}/age_key.txt";
     }

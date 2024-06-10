@@ -20,8 +20,8 @@ class CronHandler
     {
         $confRepo = new ConfigurationRepository();
         $conf = $confRepo->findAll(true)[0];
-        $bootPlugin = App::get()->getConfig()['plugin_path_boot'];
-        $emHttpPlugin = App::get()->getConfig()['plugin_path'];
+        $bootPlugin = App::get()->getConfig()['plugin_path_flash'];
+        $emHttpPlugin = App::get()->getConfig()['plugin_path_http'];
         $cronPath = "{$bootPlugin}/backuper.cron";
 
         $command = $this->getCommandFromConf($conf);

@@ -20,7 +20,7 @@ class Migrate extends BaseCommand
     {
         parent::__construct($argv);
 
-        $this->pluginPath = App::get()->getConfig()['plugin_path'];
+        $this->pluginPath = App::get()->getConfig()['plugin_path_http'];
         $this->migrationPath = $this->pluginPath.DIRECTORY_SEPARATOR."migrations";
         $this->migrationRepo = new MigrationRepository();
     }

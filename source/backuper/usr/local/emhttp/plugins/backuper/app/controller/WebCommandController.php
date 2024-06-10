@@ -46,8 +46,7 @@ class WebCommandController
         // TODO: Create a ".lock" file to prevent multiple processes.
         // TODO: Maybe save PID inside to give opportunity to kill it more easily.
 
-        // Trick redirection because Unraid already set HTTP Headers.
-         echo '<meta http-equiv="refresh" content="0; URL=/Backuper#healthcheck">';
+        $this->request->redirect('/Backuper#healthcheck');
     }
 
     /**
@@ -59,7 +58,7 @@ class WebCommandController
      */
     private function callCommand($action): ?int
     {
-        $bin = App::get()->getConfig()['plugin_path'] . "/bin";
+        $bin = App::get()->getConfig()['plugin_path_http'] . "/bin";
 
         if (!isset(self::COMMANDS[$action])) {
             return false;

@@ -40,7 +40,14 @@ class BackupService
         foreach ($dirs as $dir) {
             $success = $this->archiveDir($dir->getPath(), $target, $withEncryption);
 
-            if ($success) { $this->history->incrementBackupNumber(); }
+            if ($success) { $this->history->incrementBackupNumber(); continue; }
+
+            $this->history
+                ->setStatus(BackupHistory::STATUS_ERROR)
+                ->setFinishedAt(new \DateTime())
+                ->upsert();
+
+            die(1);
         }
     }
 
@@ -50,7 +57,8 @@ class BackupService
 
         $fileBaseName = basename($from);
         $fileDirName  = dirname($from);
-        $archiveFileName = "TEST_{$fileBaseName}.tar.gz";
+        $date = (new \DateTime())->format("Y-m-d_H-i-s");
+        $archiveFileName = "BACKUPER_{$date}_{$fileBaseName}.tar.gz";
 
         /**
          * Classic backup.

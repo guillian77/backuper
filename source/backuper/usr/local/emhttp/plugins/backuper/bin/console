@@ -5,7 +5,7 @@ require "plugins/backuper/app/App.php";
 
 \App\App::get()->boot("plugins/backuper");
 
-$pluginPath = \App\App::get()->getConfig()['plugin_path'];
+$pluginPath = \App\App::get()->getConfig()['plugin_path_http'];
 $commandPath = $pluginPath
     . DIRECTORY_SEPARATOR
     . "app"

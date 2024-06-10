@@ -104,6 +104,10 @@ class DirectoryController extends BaseController
         );
 
         $this->cronHandler->generate();
+
+        $this->flashBag->add("success", "Configuration has been saved.");
+
+        $this->request->redirect("/Backuper");
     }
 
     private function saveDirectory(?array $dirs, string $type): void

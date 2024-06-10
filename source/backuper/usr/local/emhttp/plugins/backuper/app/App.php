@@ -1,8 +1,7 @@
 <?php
 
-namespace App;
+namespace app;
 
-use App\Controller\DirectoryController;
 use Src\Database;
 
 class App
@@ -41,7 +40,7 @@ class App
 
     public function getDb(): Database
     {
-        return $this->db = new Database("{$this->config['plugin_path_boot']}/backuper.sqlite3");
+        return $this->db = Database::getInstance($this->config);
     }
 
     public function getConfig(): array
