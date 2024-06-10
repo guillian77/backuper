@@ -2,9 +2,13 @@
 
 Allow you to manage directories to save in one or multiple targets.
 
-You can configure:
-- schedule period
-- enable purge
-- enable encryption (with age)
-
-You can monitor backups with a quick backup history overview.
+Available features:
+- schedule backup period
+  - hourly
+  - daily
+  - monthly
+  - year
+- purge old backups
+  - choose retention delay in days
+- encrypt backup (Age needed)
+- Monitor backup/purge history

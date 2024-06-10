@@ -2,12 +2,12 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name "backuper">
 <!ENTITY author "Guillian Aufrère">
-<!ENTITY version "202406100328">
+<!ENTITY version "202406100338">
 <!ENTITY launch "Utilities/Backuper">
 <!ENTITY plugdir "/usr/local/emhttp/plugins/&name;">
 <!ENTITY github "guillian77/backuper">
 <!ENTITY pluginURL "https://raw.githubusercontent.com/&github;/master/plugin/&name;.plg">
-<!ENTITY md5 "63a99b92f16e25573f1f7a997dc9d171">
+<!ENTITY md5 "e512e9aabe59fa633bc74728a0d61112">
 ]>
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="edit" support="https://forums.unraid.net/topic/57109-plugin-custom-tab/">
 
