@@ -69,6 +69,23 @@ class DirectoryController extends BaseController
         ]);
     }
 
+    /**
+     * Allow to pause/unpause a directory from backup list.
+     *
+     * @param string $pause pause/unpause.
+     * @param int $id
+     *
+     * @return string
+     */
+    public function pauseAction(string $pause, int $id): string
+    {
+        $pause = ($pause === "true");
+
+        $this->directoryRepo->updatePaused($pause, $id);
+
+        return $this->jsonResponse("success");
+    }
+
     private function displayVersionFlash(): void
     {
         if (!$this->version->hasNew()) {

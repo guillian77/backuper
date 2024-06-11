@@ -40,4 +40,16 @@ class DirectoryRepository extends BaseRepository
 
         $stmt->clear();
     }
+
+    public function updatePaused(bool $pause, int $id): void
+    {
+        $stmt = $this->db->conn->prepare("UPDATE directory SET paused = :pause WHERE id = :id;");
+
+        $stmt->bindParam(":pause", $pause, SQLITE3_INTEGER);
+        $stmt->bindParam(":id", $id);
+
+        dump($stmt->getSQL(true));
+
+        $stmt->execute();
+    }
 }

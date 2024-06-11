@@ -120,3 +120,8 @@ table tr td {
 .btn.folder { background-color: #ff9900; }
 /*.btn.folder:hover { background-color: #C2801FFF; }*/
 .btn.remove { background-color: var(--color-error); }
+
+/* Play/Pause directory icons */
+.btn.icon-u-pause { background-color: var(--color-warning); }
+.btn.icon-u-play  { background-color: var(--color-success); }
+.btn

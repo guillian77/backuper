@@ -1,0 +1,1 @@
+ALTER TABLE directory ADD COLUMN paused INTEGER DEFAULT false NOT NULL;

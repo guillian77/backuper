@@ -30,6 +30,7 @@ class DirectorySerializer
             "id" => $directory->getId(),
             "path" => $directory->getPath(),
             "type" => $directory->getType(),
+            "paused" => $directory->getPaused(),
         ];
     }
 

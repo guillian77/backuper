@@ -17,6 +17,11 @@ class BaseController
         $this->entityManager = new EntityManager();
     }
 
+    public function jsonResponse(mixed $data): string
+    {
+        return json_encode($data);
+    }
+
     public function render(string $view, array $parameters = []): string
     {
         $viewPath = $this->appConfig['view_path'] .DIRECTORY_SEPARATOR . $view;

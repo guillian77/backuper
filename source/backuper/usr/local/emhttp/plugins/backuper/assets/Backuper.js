@@ -11,7 +11,7 @@ export default class Backuper {
         this.conf = conf
 
         for (let dir of dirs) {
-            this.#addToDirList(dir.type, dir.path, dir.id)
+            this.#addToDirList(dir.type, dir.path, dir.id, dir.paused)
         }
 
         Object.keys(conf).map(confKey => { this.#applyConfiguration(confKey) })
@@ -57,13 +57,13 @@ export default class Backuper {
         })
     }
 
-    #addToDirList(type, value, id) {
+    #addToDirList(type, value, id, paused = false) {
         document
             .querySelector(`#${type}_dir_list button`)
-            .before(this.#createPathInput(type, value, id))
+            .before(this.#createPathInput(type, value, id, paused))
     }
 
-    #createPathInput(type, value, id) {
+    #createPathInput(type, value, id, paused = false) {
         let random = Math.floor(Math.random() * (new Date()).getTime())
         if (!["backup", "target"].includes(type)) { throw new Error(`${type} not allowed.`) }
         if (!id ) { id = `new-${random}` }
@@ -88,6 +88,13 @@ export default class Backuper {
             visualizeIcon.target = "_blank"
             visualizeIcon.title = "Explore target directory."
 
+        let pauseClass = (paused) ? "pause" : "play"
+        let pauseIcon = document.createElement("span")
+            pauseIcon.setAttribute('data-id', id)
+            pauseIcon.classList.add(`icon-u-${pauseClass}`, "btn")
+            pauseIcon.title = `Set ${pauseClass} for this directory.`
+            pauseIcon.dataset.pause = paused.toString()
+
         removeButton.addEventListener("click", e => { this.#deleteDir(e.target) })
 
         let container = document.createElement("div")
@@ -95,6 +102,7 @@ export default class Backuper {
             container.append(input)
             container.append(removeButton)
             if (type === "target") container.append(visualizeIcon)
+            if (type === "backup") container.append(pauseIcon)
             container.dataset['type'] = type
 
         return container

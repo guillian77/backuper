@@ -14,6 +14,8 @@ class Directory extends BaseEntity
 
     private string $type;
 
+    private bool $paused;
+
     public function getId(): int
     {
         return $this->id;
@@ -46,6 +48,18 @@ class Directory extends BaseEntity
     public function setType(string $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getPaused(): bool
+    {
+        return $this->paused;
+    }
+
+    public function setPaused(bool $paused): self
+    {
+        $this->paused = $paused;
 
         return $this;
     }
