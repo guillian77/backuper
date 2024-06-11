@@ -76,7 +76,7 @@ pushd "$PACKAGE_DIR"
   chmod -R 755 usr/
 
   echo "Creating archive..."
-  "${PREFIX}tar" -cJf "$FILE" --owner=0 --group=0 usr/
+  "${PREFIX}tar" --exclude=*.sqlite3 -cJf "$FILE" --owner=0 --group=0 usr/
 popd
 
 echo "Verifying package"
