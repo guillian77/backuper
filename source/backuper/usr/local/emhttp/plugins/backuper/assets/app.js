@@ -13,17 +13,28 @@ new Backuper(
  * --------------------------------------------------
  */
 function pauseDirectory(element) {
+    let isPaused = (element.dataset.pause === "true")
+    let toggledValue = !isPaused
+    let classes = { true: "icon-u-play", false: "icon-u-pause" }
+    let targetClass = classes[toggledValue]
+
     // Toggle pause.
-    element.dataset.pause = (element.dataset.pause === "true") ? "false" : "true"
+    element.dataset.pause = toggledValue.toString()
+
+    // Clear existing classes.
+    element.classList.remove("icon-u-pause", "icon-u-play")
+
+    // Add the correct class.
+    element.classList.add(targetClass)
 
     Xhr
         .post("DirectoryController", "pauseAction", {
-            pause: (element.dataset.pause === "true"),
+            pause: toggledValue,
             id: element.dataset.id,
         })
 }
 
-let pauseElements = document.querySelectorAll("span.icon-u-pause")
+let pauseElements = document.querySelectorAll("span.pause-handler")
 pauseElements.forEach((el) => {
     el.addEventListener("click", e => pauseDirectory(e.target))
 })

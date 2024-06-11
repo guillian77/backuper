@@ -88,10 +88,10 @@ export default class Backuper {
             visualizeIcon.target = "_blank"
             visualizeIcon.title = "Explore target directory."
 
-        let pauseClass = (paused) ? "pause" : "play"
+        let pauseClass = (paused) ? "play" : "pause"
         let pauseIcon = document.createElement("span")
             pauseIcon.setAttribute('data-id', id)
-            pauseIcon.classList.add(`icon-u-${pauseClass}`, "btn")
+            pauseIcon.classList.add(`icon-u-${pauseClass}`, "pause-handler", "btn")
             pauseIcon.title = `Set ${pauseClass} for this directory.`
             pauseIcon.dataset.pause = paused.toString()
 
