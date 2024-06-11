@@ -38,6 +38,8 @@ class BackupService
         $dirs = (new DirectoryRepository())->findByType(Directory::TYPE_BACKUP);
 
         foreach ($dirs as $dir) {
+            if ($dir->getPaused()) { continue; }
+
             $success = $this->archiveDir($dir->getPath(), $target, $withEncryption);
 
             if ($success) { $this->history->incrementBackupNumber(); continue; }
