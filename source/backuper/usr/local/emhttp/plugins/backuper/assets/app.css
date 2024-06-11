@@ -61,6 +61,7 @@
 .input-list-container {
     display: flex;
     align-items: end;
+    position: relative;
 }
 
 .label-block {
@@ -124,4 +125,22 @@ table tr td {
 /* Play/Pause directory icons */
 .btn.icon-u-pause { background-color: var(--color-warning); }
 .btn.icon-u-play  { background-color: var(--color-success); }
-.btn
+
+.browser-list {
+    background-color: #fff;
+    display: none;
+    padding: 5px;
+    position: absolute;
+    top: 18px;
+    left: 1px;
+    list-style: none;
+    width: 300px;
+    height: 150px;
+    overflow-y: scroll;
+    z-index: 999;
+}
+
+.browser-list li:hover {
+    background-color: grey;
+    cursor: pointer;
+}

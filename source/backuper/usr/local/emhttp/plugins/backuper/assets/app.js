@@ -1,5 +1,6 @@
-import Backuper from "./Backuper.js";
 import TemplateExtension from "./TemplateExtension.js";
+import FileBrowser from "./FileBrowser.js";
+import Backuper from "./Backuper.js";
 import Xhr from "./Xhr.js";
 
 new Backuper(
@@ -7,6 +8,14 @@ new Backuper(
     TemplateExtension.variableFromTemplate("conf")
 )
 
+/**
+ * --------------------------------------------------
+ * File Browser.
+ * --------------------------------------------------
+ */
+document
+    .querySelectorAll("input[type=text]")
+    .forEach(input => { new FileBrowser(input) })
 /**
  * --------------------------------------------------
  * Toggle paused directories.

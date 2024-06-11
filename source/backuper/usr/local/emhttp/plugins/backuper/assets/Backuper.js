@@ -95,15 +95,19 @@ export default class Backuper {
             pauseIcon.title = `Set ${pauseClass} for this directory.`
             pauseIcon.dataset.pause = paused.toString()
 
+        let browserList = document.createElement("ul")
+            browserList.classList.add("browser-list")
+
         removeButton.addEventListener("click", e => { this.#deleteDir(e.target) })
 
         let container = document.createElement("div")
             container.classList.add("input-list-container")
+            container.dataset['type'] = type
             container.append(input)
             container.append(removeButton)
             if (type === "target") container.append(visualizeIcon)
             if (type === "backup") container.append(pauseIcon)
-            container.dataset['type'] = type
+            container.append(browserList)
 
         return container
     }
