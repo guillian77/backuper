@@ -1,4 +1,5 @@
 import Alert from "./Alert.js";
+import FileBrowser from "./FileBrowser.js";
 
 export default class Backuper {
     alert = new Alert()
@@ -67,7 +68,7 @@ export default class Backuper {
         let random = Math.floor(Math.random() * (new Date()).getTime())
         if (!["backup", "target"].includes(type)) { throw new Error(`${type} not allowed.`) }
         if (!id ) { id = `new-${random}` }
-        if (!value ) { value = "" }
+        if (!value ) { value = "/" }
 
         let input = document.createElement("input")
             input.type = "text"
@@ -109,6 +110,8 @@ export default class Backuper {
             if (type === "target") container.append(visualizeIcon)
             if (type === "backup") container.append(pauseIcon)
             container.append(browserList)
+
+        new FileBrowser(input)
 
         return container
     }

@@ -10,14 +10,6 @@ new Backuper(
 
 /**
  * --------------------------------------------------
- * File Browser.
- * --------------------------------------------------
- */
-document
-    .querySelectorAll("input[type=text]")
-    .forEach(input => { new FileBrowser(input) })
-/**
- * --------------------------------------------------
  * Toggle paused directories.
  * --------------------------------------------------
  */
