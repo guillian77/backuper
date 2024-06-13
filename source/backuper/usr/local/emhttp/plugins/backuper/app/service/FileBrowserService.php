@@ -6,17 +6,20 @@ class FileBrowserService
 {
     const ROOT = "/root/..";
 
-    private ?string $previous = null;
-
-    public function scan(string $target, string $previous): ?array
+    /**
+     * Return directory list inside a given path.
+     *
+     * @param string $target
+     *
+     * @return array|null
+     */
+    public function scan(string $target): ?array
     {
         // Set linux root by default.
         if ($target === "") { $target = self::ROOT; }
 
         // Avoid non-existing path.
         if (!file_exists($target)) { return null; }
-
-        if ($previous !== "") { $target = dirname($previous); }
 
         $dirNames = scandir($target);
 
@@ -34,12 +37,9 @@ class FileBrowserService
             $dirs[] = $path;
         }
 
-        return $dirs;
-    }
+        $dirs['parent'] = dirname($target);
 
-    private function isSymbols(string $dirname): bool
-    {
-        return in_array($dirname, [".", ".."]);
+        return $dirs;
     }
 
     private function plugPath(string $dirname, string $path): string

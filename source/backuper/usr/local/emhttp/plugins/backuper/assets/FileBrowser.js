@@ -1,5 +1,8 @@
 import Xhr from "./Xhr.js";
 
+/**
+ * Display a file browser on input.
+ */
 export default class FileBrowser {
     /**
      * Input HTMLElement who trigger browser list.
@@ -16,8 +19,6 @@ export default class FileBrowser {
      * @type {HTMLElement}
      */
     container = null
-
-    previous = null
 
     constructor(input) {
         this.input = input
@@ -38,40 +39,43 @@ export default class FileBrowser {
      * Get directories from a path.
      *
      * @param {String} path Reference path to get list of directories.
-     * @param {String} prev Path of previous value in input (used when hit "..").
+     * @param {Boolean} withPrevious Path of previous value in input (used when hit "..").
      *
      * @return {Promise} Directories list.
      */
-    async #getDirs(path, prev = null) {
+    async #getDirs(path, withPrevious = false) {
         return Xhr.post("BrowserController", "browseAction", {
             target: path,
-            previous: prev
         })
     }
 
-    async #handleBrowser(typedValue) {
-        let dirs = JSON.parse(await this.#getDirs(typedValue, this.previous))
+    async #handleBrowser(typedValue, withPrevious = false) {
+        let dirs = JSON.parse(await this.#getDirs(typedValue, withPrevious))
+        let previous = dirs['parent']
 
         if (!dirs) { return }
 
         this.#clearContainer()
+        this.#displayContainer()
 
-        dirs.forEach(dir => {
+        for (let key in dirs) {
+            let dir = dirs[key]
+
+            if (key === "parent") { break; }
+
             let row = this.#createRowElement(dir)
 
             this.container.append(row)
-            this.container.style.display = "block"
 
-            row.addEventListener("click", clickEvent => {
-                if (clickEvent.target.innerText === "..") {
-                    //Do something.
-                }
+            row.addEventListener("click", e => {
+                let clickValue = e.target.innerText
 
-                this.input.value = clickEvent.target.innerText
+                if (clickValue === "..") { clickValue = previous }
 
-                this.#clearContainer()
+                this.#fillInputWith(clickValue)
+                this.#handleBrowser(clickValue)
             })
-        })
+        }
     }
 
     /**
@@ -95,4 +99,8 @@ export default class FileBrowser {
 
         this.container.style.display = "none"
     }
+
+    #displayContainer() { this.container.style.display = "block" }
+
+    #fillInputWith(value) { this.input.value = value }
 }

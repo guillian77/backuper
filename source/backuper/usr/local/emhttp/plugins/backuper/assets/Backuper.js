@@ -73,6 +73,7 @@ export default class Backuper {
             input.type = "text"
             input.name = `${type}_dir[${id}]`
             input.placeholder = "/mnt/user/directory_to_save"
+            input.autocomplete = "off"
             input.title = "Add your path"
             input.classList.add("input-row")
             input.value = value

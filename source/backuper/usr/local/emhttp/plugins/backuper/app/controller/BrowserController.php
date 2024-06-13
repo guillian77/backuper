@@ -13,8 +13,8 @@ class BrowserController extends BaseController
         $this->fileBrowser = new FileBrowserService();
     }
 
-    public function browseAction(?string $target = null, string $previous = null): string
+    public function browseAction(?string $target = null): string
     {
-        return $this->jsonResponse($this->fileBrowser->scan($target, $previous));
+        return $this->jsonResponse($this->fileBrowser->scan($target));
     }
 }
