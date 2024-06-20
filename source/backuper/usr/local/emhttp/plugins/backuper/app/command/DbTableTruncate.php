@@ -5,7 +5,7 @@ namespace app\command;
 class DbTableTruncate extends BaseCommand
 {
     const DB_TABLES = [
-        'backup_history',
+        'history',
         'configuration',
         'directory',
         'migration',

@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
-use DateInterval;
+use app\attribute\HasMany;
 use DateTime;
 
-class BackupHistory extends BaseEntity
+#[HasMany(Directory::class)]
+class History extends BaseEntity
 {
     const RUN_TYPE_BACKUP = "backup";
     const RUN_TYPE_BACKUP_ENCRYPTED = "backup-encrypted";
@@ -33,6 +34,8 @@ class BackupHistory extends BaseEntity
     private ?int $purgedNumber = 0;
 
     private ?int $targetNumber = 0;
+
+    private array $dirs = [];
 
     private string $status;
 
@@ -160,5 +163,26 @@ class BackupHistory extends BaseEntity
         $this->status = $status;
 
         return $this;
+    }
+
+    public function addDirectory(Directory $directory): self
+    {
+        $this->dirs[] = $directory;
+
+        return $this;
+    }
+
+    /**
+     * @return Directory[]
+     */
+    public function removeDirectory(): self
+    {
+        // TODO: .
+        return $this->dirs;
+    }
+
+    public function listDirectory(): array
+    {
+        return $this->dirs;
     }
 }

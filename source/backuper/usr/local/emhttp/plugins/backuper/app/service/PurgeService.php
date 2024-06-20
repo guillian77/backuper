@@ -2,7 +2,7 @@
 
 namespace app\service;
 
-use App\Entity\BackupHistory;
+use App\Entity\History;
 use App\Entity\Configuration;
 use App\Entity\Directory;
 use App\Repository\ConfigurationRepository;
@@ -10,21 +10,21 @@ use App\Repository\DirectoryRepository;
 
 class PurgeService
 {
-    private BackupHistory $history;
+    private History $history;
     private Configuration $conf;
 
     public function __construct()
     {
-        $this->history = new BackupHistory();
+        $this->history = new History();
         $this->conf = (new ConfigurationRepository())->findAll()[0];
     }
 
-    public function run(BackupHistory $history = null)
+    public function run(History $history = null)
     {
         if ($history) { $this->history = $history; }
 
         $this->history
-            ->setStatus(BackupHistory::STATUS_PURGE)
+            ->setStatus(History::STATUS_PURGE)
             ->upsert();
 
         $targetDirs = (new DirectoryRepository())->findByType(Directory::TYPE_TARGET);
@@ -41,7 +41,7 @@ class PurgeService
     public function purgeDir(string $directory): void
     {
         $this->history
-            ->setStatus(BackupHistory::STATUS_PURGE)
+            ->setStatus(History::STATUS_PURGE)
             ->upsert();
 
         $dirService = new DirectoryService();

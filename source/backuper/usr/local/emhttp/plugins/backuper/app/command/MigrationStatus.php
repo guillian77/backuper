@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Command;
+namespace app\command;
 
 use App\App;
 use app\entity\Migration;
 use app\repository\MigrationRepository;
 use DateTime;
 
-class Migrate extends BaseCommand
+class MigrationStatus extends BaseCommand
 {
-    public string $commandName = "db:migrate";
-    public string $commandDescription = "Allow to migrate database from migrations.";
+    public string $commandName = "db:migration:status";
+    public string $commandDescription = "Allow to monitor migrations status.";
 
     private MigrationRepository $migrationRepo;
     private mixed $pluginPath;
@@ -34,42 +34,24 @@ class Migrate extends BaseCommand
         });
 
         foreach ($migrationFiles as $migrationFile) {
-            $exist = $this->migrationRepo->findByName($migrationFile);
+            $migration = $this->migrationRepo->findByName($migrationFile);
 
-            if ($exist) {
-                $this->output->info("$migrationFile already executed.");
-
+            if (!$migration) {
+                echo "|   | $migrationFile |     /      | /  | \n";
                 continue;
             }
 
-            $this->executeQuery($migrationFile);
+            $tableString  = "| {$migration->getId()} ";
+            $tableString .= "| {$migration->getName()} ";
+            $tableString .= "| {$migration->getExecution()->format("Y-m-d")} ";
+            $tableString .= "| UP |\n";
 
-            (new Migration())
-                ->setName($migrationFile)
-                ->setExecution(new DateTime("now"))
-                ->upsert();
-
-            $this->output->info("$migrationFile has been executed.");
+            echo $tableString;
         }
-
-        $this->output->success("Migrations successfully executed.");
     }
 
     private function createMigrationTableIfNotExist(): void
     {
         $this->conn->query("CREATE TABLE IF NOT EXISTS migration(id INTEGER PRIMARY KEY, name TEXT NOT NULL, execution DATETIME NOT NULL);");
-    }
-
-    private function executeQuery(string $migrationFile): void
-    {
-        $migrationContent = file_get_contents( "{$this->migrationPath}/{$migrationFile}");
-
-        $executed = $this->conn->query($migrationContent);
-
-        if ($executed) { return; }
-
-        $this->output->error("Failed to apply migration $migrationFile");
-
-        die(1);
     }
 }

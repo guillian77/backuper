@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\Entity\BackupHistory;
+use App\Entity\History;
 use App\Repository\DirectoryRepository;
 use App\Service\BackupService;
 use app\service\PurgeService;
@@ -13,7 +13,7 @@ class Purge extends BaseCommand
     public string $commandName = "purge";
 
     public string $commandDescription = "Manually launch purge.";
-    private ?BackupHistory $history = null;
+    private ?History $history = null;
     private bool $comeFromOutside = false;
 
     public function commandUsage(): string
@@ -32,14 +32,14 @@ class Purge extends BaseCommand
         $history = $this->getHistory();
         $history
             ->setStartedAt(new DateTime())
-            ->setStatus(BackupHistory::STATUS_START)
-            ->setRunType(BackupHistory::RUN_TYPE_PURGE)
+            ->setStatus(History::STATUS_START)
+            ->setRunType(History::RUN_TYPE_PURGE)
             ->upsert();
 
         (new PurgeService())->run($history);
 
         $history
-            ->setStatus(BackupHistory::STATUS_END)
+            ->setStatus(History::STATUS_END)
             ->setFinishedAt(new DateTime())
             ->upsert();
 
@@ -51,7 +51,7 @@ class Purge extends BaseCommand
         $this->output->success("Purge {$history->getPurgedNumber()} directories on {$targetCount} target(s).");
     }
 
-    public function setHistory(BackupHistory $history): self
+    public function setHistory(History $history): self
     {
         $this->history = $history;
         $this->comeFromOutside = true;
@@ -59,10 +59,10 @@ class Purge extends BaseCommand
         return $this;
     }
 
-    public function getHistory(): BackupHistory
+    public function getHistory(): History
     {
         if (!$this->history) {
-            return new BackupHistory();
+            return new History();
         }
 
         return $this->history;

@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use App\Entity\BackupHistory;
+use App\Entity\History;
 use App\Entity\Configuration;
 use App\Entity\Directory;
 use App\Repository\ConfigurationRepository;
@@ -12,13 +12,13 @@ class BackupService
 {
     private DirectoryRepository $direRepo;
     private Configuration $conf;
-    private BackupHistory $history;
+    private History $history;
     private array $backupDirs;
 
     public function __construct()
     {
         $this->direRepo = new DirectoryRepository();
-        $this->history  = new BackupHistory();
+        $this->history  = new History();
         $this->conf = (new ConfigurationRepository())->findAll()[0];
         $this->backupDirs = $this->direRepo->findByType(Directory::TYPE_BACKUP);
     }
@@ -26,13 +26,13 @@ class BackupService
     public function run(
         string $target,
         bool $withEncryption = false,
-        BackupHistory $history = null
+        History $history = null
     ): void
     {
         if ($history) { $this->history = $history; }
 
         $this->history
-            ->setStatus(BackupHistory::STATUS_BACKUP)
+            ->setStatus(History::STATUS_BACKUP)
             ->upsert();
 
         $dirs = (new DirectoryRepository())->findByType(Directory::TYPE_BACKUP);
@@ -45,7 +45,7 @@ class BackupService
             if ($success) { $this->history->incrementBackupNumber(); continue; }
 
             $this->history
-                ->setStatus(BackupHistory::STATUS_ERROR)
+                ->setStatus(History::STATUS_ERROR)
                 ->setFinishedAt(new \DateTime())
                 ->upsert();
 

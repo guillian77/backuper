@@ -2,10 +2,19 @@
 
 namespace app\repository;
 
+use app\entity\Migration;
+use app\serializer\MigrationSerializer;
+
 class MigrationRepository extends BaseRepository
 {
-    public function findByName(string $name): false|\SQLite3Result
+    public function findByName(string $name): null|Migration
     {
-        return $this->db->conn->query("SELECT * FROM migration WHERE name = '$name'");
+        $migration = $this->db->conn
+            ->query("SELECT * FROM migration WHERE name = '$name' LIMIT 1")
+            ->fetchArray(SQLITE3_ASSOC);
+
+        if (!$migration) { return null; }
+
+        return (new MigrationSerializer())->deserialize($migration);
     }
 }

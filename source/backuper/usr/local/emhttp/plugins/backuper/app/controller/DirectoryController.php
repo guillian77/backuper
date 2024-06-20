@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\App;
 use App\Entity\Configuration;
 use App\Entity\Directory;
-use App\Repository\BackupHistoryRepository;
+use App\Repository\HistoryRepository;
 use App\Repository\ConfigurationRepository;
 use App\Repository\DirectoryRepository;
 use App\Serializer\ConfigurationSerializer;
@@ -22,7 +22,7 @@ class DirectoryController extends BaseController
     private DirectoryRepository $directoryRepo;
     private DirectorySerializer $directorySerializer;
     private ConfigurationRepository $configurationRepo;
-    private BackupHistoryRepository $historyRepo;
+    private HistoryRepository $historyRepo;
     private ConfigurationSerializer $configurationSerializer;
     private RequestService $request;
     private CronHandler $cronHandler;
@@ -36,7 +36,7 @@ class DirectoryController extends BaseController
 
         $this->directoryRepo = new DirectoryRepository();
         $this->configurationRepo = new ConfigurationRepository();
-        $this->historyRepo = new BackupHistoryRepository();
+        $this->historyRepo = new HistoryRepository();
         $this->directorySerializer = new DirectorySerializer();
         $this->configurationSerializer = new ConfigurationSerializer();
         $this->request = new RequestService();
@@ -58,6 +58,8 @@ class DirectoryController extends BaseController
         $conf = $this->configurationRepo->findAll()[0];
 
         $this->createKeyIfNotExist($conf);
+
+//        dd($this->historyRepo->findAll(limit: 10, orderBy: "id DESC"));
 
         return $this->render('backuper.html', [
             "dirs" => $this->directoryRepo->findAll(),

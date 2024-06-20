@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\Entity\BackupHistory;
+use App\Entity\History;
 use DateTime;
 
 class BackupAndPurge extends BaseCommand
@@ -31,7 +31,7 @@ class BackupAndPurge extends BaseCommand
 
     public function execute(): void
     {
-        $history = new BackupHistory();
+        $history = new History();
 
         $this->output->title("Backup and Purge");
 
@@ -44,7 +44,7 @@ class BackupAndPurge extends BaseCommand
             ->execute();
 
         $encrypt = ($this->getOption("encrypt", false) || $this->hasArgument("e"));
-        $runType = ($encrypt) ? BackupHistory::RUN_TYPE_ALL_ENCRYPTED : BackupHistory::RUN_TYPE_ALL;
+        $runType = ($encrypt) ? History::RUN_TYPE_ALL_ENCRYPTED : History::RUN_TYPE_ALL;
 
         $history
             ->setRunType($runType)

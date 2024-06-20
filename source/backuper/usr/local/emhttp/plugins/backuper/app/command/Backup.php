@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\Entity\BackupHistory;
+use App\Entity\History;
 use App\Repository\DirectoryRepository;
 use App\Service\BackupService;
 use DateTime;
@@ -12,7 +12,7 @@ class Backup extends BaseCommand
     public string $commandName = "backup";
 
     public string $commandDescription = "Manually launch backups.";
-    private ?BackupHistory $history = null;
+    private ?History $history = null;
 
     public function commandUsage(): string
     {
@@ -30,12 +30,12 @@ class Backup extends BaseCommand
         $targets = (new DirectoryRepository())->findTargetsDirs();
         $backupService = new BackupService();
 
-        $runType = ($encrypt) ? BackupHistory::RUN_TYPE_BACKUP_ENCRYPTED : BackupHistory::RUN_TYPE_BACKUP;
+        $runType = ($encrypt) ? History::RUN_TYPE_BACKUP_ENCRYPTED : History::RUN_TYPE_BACKUP;
 
         $history = $this->getHistory();
         $history
             ->setStartedAt(new \DateTime())
-            ->setStatus(BackupHistory::STATUS_START)
+            ->setStatus(History::STATUS_START)
             ->setRunType($runType)
             ->upsert();
 
@@ -49,23 +49,23 @@ class Backup extends BaseCommand
 
         $history
             ->setFinishedAt(new DateTime())
-            ->setStatus(BackupHistory::STATUS_END)
+            ->setStatus(History::STATUS_END)
             ->upsert();
 
         $this->output->success("Backup {$history->getBackupNumber()} directories on {$history->getTargetNumber()} target(s).");
     }
 
-    public function setHistory(BackupHistory $history): self
+    public function setHistory(History $history): self
     {
         $this->history = $history;
 
         return $this;
     }
 
-    public function getHistory(): BackupHistory
+    public function getHistory(): History
     {
         if (!$this->history) {
-            return new BackupHistory();
+            return new History();
         }
 
         return $this->history;
