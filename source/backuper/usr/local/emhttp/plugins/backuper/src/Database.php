@@ -1,15 +1,22 @@
 <?php
 
-namespace src;
+namespace Src;
 
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Tools\DsnParser;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
+use Doctrine\ORM\ORMSetup;
 use Exception;
-use SQLite3;
 
 class Database
 {
     private const DB_NAME = "backuper.sqlite3";
 
-    public SQLite3 $conn;
+    public Connection $conn;
+
+    public EntityManager $entityManager;
     private static Database|null $_instance = null;
 
     /**
@@ -44,7 +51,15 @@ class Database
 
         if (!file_exists($this->runningDB)) $this->pullPersistedDB();
 
-        $this->conn = new SQLite3($this->runningDB);
+        $dsnParser = new DsnParser();
+        $connectionParams = $dsnParser->parse('sqlite3:///plugins/backuper/backuper.sqlite3');
+        $paths = [$conf['plugin_path_http'] . "/app/entity"];
+        $config = ORMSetup::createAttributeMetadataConfiguration($paths, true);
+
+        $config->setNamingStrategy((new UnderscoreNamingStrategy()));
+
+        $this->conn = DriverManager::getConnection($connectionParams);
+        $this->entityManager = new EntityManager($this->conn, $config);
     }
 
     public function __destruct() { $this->persistRunningDB(); }

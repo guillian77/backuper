@@ -1,0 +1,18 @@
+Menu="Utilities"
+Title="Test"
+Icon="edit"
+---
+<?php
+
+use App\Controller\DirectoryController;
+use Src\App;
+
+$plugin = 'backuper';
+$cfg = parse_plugin_cfg($plugin);
+
+require "plugins/backuper/vendor/autoload.php";
+
+$db = App::get()->boot("plugins/backuper");
+
+echo (new DirectoryController())->index();
+?>
