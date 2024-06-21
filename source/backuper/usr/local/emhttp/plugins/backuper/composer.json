@@ -1,0 +1,24 @@
+{
+    "name": "backuper/backuper",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Src\\": "src/",
+            "App\\": "App/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Guillian Aufrère"
+        }
+    ],
+    "require": {
+        "doctrine/orm": "^3.2",
+        "symfony/cache": "^7.1",
+        "symfony/serializer": "^7.1",
+        "symfony/property-access": "^7.1"
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^7.1"
+    }
+}
