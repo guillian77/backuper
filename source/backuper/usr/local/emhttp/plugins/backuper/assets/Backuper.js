@@ -11,8 +11,10 @@ export default class Backuper {
     constructor(dirs, conf) {
         this.conf = conf
 
-        for (let dir of dirs) {
-            this.#addToDirList(dir.type, dir.path, dir.id, dir.paused)
+        dirs = JSON.parse(dirs)
+
+        for (const key in dirs) {
+            this.#addToDirList(JSON.parse(dirs[key]))
         }
 
         Object.keys(conf).map(confKey => { this.#applyConfiguration(confKey) })
@@ -43,7 +45,7 @@ export default class Backuper {
     #initAddButtons() {
         document.querySelectorAll(".btn.add").forEach(addButton => {
             addButton.addEventListener("click", e => {
-                this.#addToDirList(e.target.dataset['type'])
+                this.#addToDirList({type: e.target.dataset['type']})
             })
         })
     }
@@ -58,10 +60,10 @@ export default class Backuper {
         })
     }
 
-    #addToDirList(type, value, id, paused = false) {
+    #addToDirList(dir) {
         document
-            .querySelector(`#${type}_dir_list button`)
-            .before(this.#createPathInput(type, value, id, paused))
+            .querySelector(`#${dir.type}_dir_list button`)
+            .before(this.#createPathInput(dir.type, dir.path, dir.id, dir.paused))
     }
 
     #createPathInput(type, value, id, paused = false) {

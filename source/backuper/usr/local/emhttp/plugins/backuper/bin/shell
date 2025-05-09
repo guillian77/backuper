@@ -1,0 +1,21 @@
+#!/bin/bash
+
+IMAGE_NAME="backuper/backuper"
+
+function build() {
+    docker rmi -f $IMAGE_NAME
+    docker build -t $IMAGE_NAME -f Dockerfile .
+}
+
+if [[ "$(docker images -q $IMAGE_NAME 2> /dev/null)" == "" ]]; then
+    build
+fi
+
+case $1 in
+build)
+    build
+  ;;
+*)
+    docker run -it --rm -v $(pwd):/app $IMAGE_NAME bash
+  ;;
+esac

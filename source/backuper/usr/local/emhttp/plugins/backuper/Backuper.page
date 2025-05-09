@@ -1,5 +1,5 @@
 Menu="Utilities"
-Title="Backuper"
+Title="Backuperr"
 Icon="edit"
 ---
 <?php
@@ -7,9 +7,10 @@ Icon="edit"
 $plugin = 'backuper';
 $cfg = parse_plugin_cfg($plugin);
 
-require "plugins/backuper/app/App.php";
-
-\App\App::get()->boot("plugins/backuper");
-
-echo (new \App\Controller\DirectoryController())->index();
+require "plugins/backuper/vendor/autoload.php";
+//require "plugins/backuper/app/App.php";
+//
+//\App\App::get()->boot("plugins/backuper");
+//
+//echo (new \App\Controller\DirectoryController())->index();
 ?>

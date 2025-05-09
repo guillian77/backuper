@@ -1,7 +1,7 @@
 <?php
 
-use App\App;
-use app\service\RequestService;
+use App\Service\RequestService;
+use Src\App;
 
 require "plugins/backuper/app/App.php";
 
@@ -12,7 +12,7 @@ $controller = $request->post("controller");
 $method = $request->post("method", "index");
 $data = $request->post("data", []);
 
-$namespace = "app\\controller\\$controller";
+$namespace = "App\\Controller\\$controller";
 
 $instance = new $namespace();
 $jsonResponse = call_user_func([$instance, $method], ...$data);
